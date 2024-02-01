@@ -2,6 +2,7 @@ use std::io::{BufReader, BufRead};
 use std::io::Write;
 use std::fs;
 use std::fs::File;
+use std::env::{self, args};
 use serde::{Serialize, Deserialize};
 use clap::Parser;
 
@@ -21,13 +22,43 @@ pub struct CLI {
 }
 
 #[derive(Serialize, Deserialize)]
-pub struct Account {
+struct Account {
     tenancy_id: String,
     user_id: String,
     fingerprint: String,
     private_key_path: String,
-    region: String,
+    home_region: Regions, // selection of active regions
     pass_phrase: String,
+}
+
+#[derive(Debug)]
+enum Regions {
+    ASH,
+    PHX,
+    FRA,
+    LON,
+}
+
+impl Account {
+    fn new(tenancy_id: String, user_id: String, fingerprint: String, private_key_path: String, home_region: Regions, pass_phrase: String,) -> Account {
+        Self {
+            tenancy_id,
+            user_id,
+            fingerprint,
+            private_key_path,
+            home_region,
+            pass_phrase,
+        } 
+    }
+    // translate popularity flag to meaningful string
+    fn region(&self) -> &'static str {
+        match self.home_region {
+            Regions::FRA => "eu-frankfurt-1",
+            Regions::PHX => "us-Phoenix-1",
+            Regions::LON => "eu-london-1",
+            Regions::ASH => "us-ashburn-1",
+        }
+    }
 }
 
 pub fn read_stdin() -> String {
@@ -47,7 +78,7 @@ pub fn split_line(s: String, cli: &CLI) -> String {
     parts.get(cli.field).unwrap_or(&"").to_string()
 }
 
-pub fn home() {
+fn home() {
     // Specify the path for the new directory
     let dir_path = "$HOME/.ocloud";
 
@@ -60,14 +91,14 @@ pub fn home() {
 
 pub fn create() {
     // Create an instance of the data structure
-    let account = Account {
-        tenancy_id: "ocid1.tenancy.oc1..aaaaaaaaxxxxxxxx".to_string(),
-        user_id: "ocid1.user.oc1..aaaaaaaa".to_string(),
-        fingerprint: "aa:bb:cc:dd:ee:ff:gg:hh:ii:jj:kk:ll:mm:nn:oo:pp".to_string(),
-        private_key_path: "/home/user/.oci/oci_api_key.pem".to_string(),
-        region: "us-ashburn-1".to_string(),
-        pass_phrase: "passphrase".to_string(),
-    };
+    let account = Account::new(
+        String::from("ocid1.tenancy.oc1..aaaaaaaaxxxxxxxx"),
+        String::from("ocid1.user.oc1..aaaaaaaa"),
+        String::from("aa:bb:cc:dd:ee:ff:gg:hh:ii:jj:kk:ll:mm:nn:oo:pp"),
+        String::from("/home/user/.oci/oci_api_key.pem"),
+        Regions::FRA,
+        String::from("passphrase"),
+    );
 
     // Serialize the data structure to a JSON string
     let json_string = serde_json::to_string(&account).expect("Failed to serialize to JSON");
@@ -82,4 +113,34 @@ pub fn create() {
     file.write_all(json_string.as_bytes()).expect("Failed to write to file");
 
     println!("account.json created successfully");
+}
+
+pub fn collect() {
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() != 7 {
+        panic!("Please provide six arguments: tenancy and user id, fingerprint, private key path, home region and pass phrase.");
+    }
+
+    let account = Account::new(
+        String::from(&args[1]),
+        String::from(&args[2]),
+        String::from(&args[3]),
+        String::from(&args[4]),
+        Regions::String::from(&args[5]),
+        String::from(&args[6]),
+    );
+
+
+
+    // The first argument is the path that was used to call the program.
+    println!("My path is {}.", args[0]);
+
+    // The rest of the arguments are the passed command line parameters.
+    // Call the program like this:
+    //   $ ./args arg1 arg2
+    println!("I got {:?} arguments: {:?}.", args.len() - 1, &args[1..]);
+
+    // Print all variantes
+    println!("Account: {:?}", account);
 }
