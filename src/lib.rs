@@ -1,146 +1,194 @@
-use std::io::{BufReader, BufRead};
-use std::io::Write;
 use std::fs;
 use std::fs::File;
-use std::env::{self, args};
-use serde::{Serialize, Deserialize};
-use clap::Parser;
+use std::fs::OpenOptions;
+use std::path::PathBuf;
+use std::io::{BufRead, BufReader}; // for BufReader
+use std::io::prelude::*; // for write_all
+use directories::UserDirs;
 
-#[derive(Parser)]
-#[command(name = "ocloud")]
-#[command(version = "0.1.0")]
-#[command(author = "Torsten Boettjer")]
-#[command(about = "A tool to connect rust with oracle cloud infrastructure.")]
-
-pub struct CLI {
-    #[arg(short('f'))]
-    field: usize,
-    #[arg(short('d'))]
-    delimiter: String,
-    #[arg(long)]
-    debug: bool,
-}
-
-#[derive(Serialize, Deserialize)]
-struct Account {
-    tenancy_id: String,
-    user_id: String,
+#[derive(Debug)]
+struct Default {
+    user: String,
     fingerprint: String,
-    private_key_path: String,
-    home_region: Regions, // selection of active regions
-    pass_phrase: String,
+    key_file: String,
+    tenancy: String,
+    region: Regions, // selection of active regions
 }
 
 #[derive(Debug)]
 enum Regions {
-    ASH,
+    IAD,
     PHX,
     FRA,
     LON,
 }
 
-impl Account {
-    fn new(tenancy_id: String, user_id: String, fingerprint: String, private_key_path: String, home_region: Regions, pass_phrase: String,) -> Account {
+impl Default {
+    fn new(user: String, fingerprint: String, key_file: String, tenancy: String, region: Regions) -> Default {
         Self {
-            tenancy_id,
-            user_id,
+            user,
             fingerprint,
-            private_key_path,
-            home_region,
-            pass_phrase,
+            key_file,
+            tenancy,
+            region,
         } 
     }
-    // translate popularity flag to meaningful string
-    fn region(&self) -> &'static str {
-        match self.home_region {
+    // translate region to string
+    fn home_region(&self) -> &'static str {
+        match self.region {
             Regions::FRA => "eu-frankfurt-1",
-            Regions::PHX => "us-Phoenix-1",
+            Regions::PHX => "us-phoenix-1",
             Regions::LON => "eu-london-1",
-            Regions::ASH => "us-ashburn-1",
+            Regions::IAD => "us-ashburn-1",
         }
     }
 }
 
-pub fn read_stdin() -> String {
-    let stdin = std::io::stdin();
-    let mut reader = BufReader::new(stdin.lock());
-    let mut line = String::new();
-    reader.read_line(&mut line).expect("Failed to read input line.");
-    line.trim().to_string()
-}
-
-pub fn split_line(s: String, cli: &CLI) -> String {
-    let parts: Vec<&str> = s.split(&cli.delimiter).collect();
-    if cli.debug {
-        println!("Parts: {:?}", parts);
-        println!("Indexes available starting at 0: {}", parts.len());
+fn check_permissions(config_file: &str) { // test file permissions 
+    let config = File::open(config_file);
+    match config {
+        Ok(config) => {
+        let reader = BufReader::new(config);
+        for line in reader.lines() {
+            match line {
+                Ok(_line) => print!("."),
+                Err(error) => {
+                    panic!("Error reading line: {}", error)
+                }
+            }
+        }
+        println!("\nFile read successfully")
     }
-    parts.get(cli.field).unwrap_or(&"").to_string()
-}
-
-fn home() {
-    // Specify the path for the new directory
-    let dir_path = "$HOME/.ocloud";
-
-    // Attempt to create the directory
-    match fs::create_dir(dir_path) {
-        Ok(_) => println!("Directory created successfully"),
-        Err(e) => eprintln!("Error creating home directory: {}", e),
+    Err(error) => match error.kind() {
+            std::io::ErrorKind::NotFound => {
+                panic!("File not found: {}", error)
+            }
+            std::io::ErrorKind::PermissionDenied => {
+                panic!("Opening the file is not allowed: {}", error)
+            }
+            _ => {
+                panic!("Error opening file: {}", error)
+            }
+        }
     }
 }
 
-pub fn create() {
-    // Create an instance of the data structure
-    let account = Account::new(
-        String::from("ocid1.tenancy.oc1..aaaaaaaaxxxxxxxx"),
-        String::from("ocid1.user.oc1..aaaaaaaa"),
-        String::from("aa:bb:cc:dd:ee:ff:gg:hh:ii:jj:kk:ll:mm:nn:oo:pp"),
-        String::from("/home/user/.oci/oci_api_key.pem"),
-        Regions::FRA,
-        String::from("passphrase"),
-    );
+pub fn create_file() -> String {
+    // Get the user's home directory
+    if let Some(user_dirs) = UserDirs::new() {
+        println!("Home directory: {:?}", user_dirs.home_dir());
 
-    // Serialize the data structure to a JSON string
-    let json_string = serde_json::to_string(&account).expect("Failed to serialize to JSON");
+        // Convert &Path to PathBuf and add your sub-directory to the path.
+        let mut home_dir_pathbuf = PathBuf::from(user_dirs.home_dir());
+        home_dir_pathbuf.push(".ocloud");
 
-    // Specify the path for the JSON file
-    let file_path = "$HOME/.ocloud/account.json";
+        // Check if the sub-directory exists.
+        if home_dir_pathbuf.exists() {
+            println!("{:?} already exists", home_dir_pathbuf);
+        } else {
+            // Create the sub-directory.
+            match fs::create_dir_all(&home_dir_pathbuf) {
+                Err(why) => panic!("! {:?}", why.kind()),
+                Ok(_) => println!("Successfully created {:?}", home_dir_pathbuf),
+            }
+        }
 
-    // Attempt to create or open the file
-    let mut file = File::create(file_path).expect("Failed to create file");
+        // Create the config file in the sub-directory.
+        let file_path = home_dir_pathbuf.join("config");
+        match File::create(&file_path) {
+            Err(why) => panic!("! {:?}", why.kind()),
+            Ok(_) => println!("Successfully created {:?}", file_path),
+        }
 
-    // Write the JSON string to the file
-    file.write_all(json_string.as_bytes()).expect("Failed to write to file");
+        // convert file path to String
+        let path_buf = PathBuf::from(file_path);
+        let config_file = path_buf.to_str().expect("Failed to convert path to str").to_owned();
 
-    println!("account.json created successfully");
+        // return the file path as String
+        config_file
+
+    } else {
+        panic!("Failed to get user's home directory")
+    }
 }
 
-pub fn collect() {
-    let args: Vec<String> = env::args().collect();
+pub fn set_tenancy(
+    user: &str, 
+    fingerprint: &str,
+    key_file: &str,
+    tenancy: &str,
+    region: Regions,
+) { // write to file
+    let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
+    let path_buf = PathBuf::from(config_path);
+    let config_file = path_buf.to_str().expect("Failed to convert path to str");
+    check_permissions(config_file);
 
-    if args.len() != 7 {
-        panic!("Please provide six arguments: tenancy and user id, fingerprint, private key path, home region and pass phrase.");
+    let default = Default::new(user.to_string(), fingerprint.to_string(), key_file.to_string(), tenancy.to_string(), region);
+    let region = default.home_region();
+
+    let config = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(config_file);
+        match config {
+            Ok(mut config) => {
+                match config.write_all(format!(
+                    "[DEFAULT]\nuser={}\nfingerprint={}\nkey_file={}\ntenancy={}\nregion={}\n\n", user, fingerprint, key_file, tenancy, region).as_bytes()) {
+                Ok(_) => println!("Tenancy data written to file successfully"),
+                Err(e) => println!("Failed to write tenancy data to file: {}", e),
+            }
+        },
+        Err(e) => println!("Failed to create file: {}", e),
     }
+}
 
-    let account = Account::new(
-        String::from(&args[1]),
-        String::from(&args[2]),
-        String::from(&args[3]),
-        String::from(&args[4]),
-        Regions::String::from(&args[5]),
-        String::from(&args[6]),
-    );
+pub fn add_user(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) { // write to config file
+    let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
+    let path_buf = PathBuf::from(config_path);
+    let config_file = path_buf.to_str().expect("Failed to convert path to str");
+    check_permissions(config_file);
+    
+    let config = OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(config_file);
+    match config {
+        Ok(mut config) => {match config.write_all(format!(
+            "[ADMIN_USER]\nuser={}\nfingerprint={}\nkey_file={}\npass_phrase={}\n\n", user, fingerprint, key_file, pass_phrase).as_bytes()) {
+                Ok(_) => println!("User data written to file successfully"),
+                Err(e) => println!("Failed to write user data to file: {}", e),
+            }
+        },
+        Err(e) => println!("Failed to create file: {}", e),
+    }
+}
 
-
-
-    // The first argument is the path that was used to call the program.
-    println!("My path is {}.", args[0]);
-
-    // The rest of the arguments are the passed command line parameters.
-    // Call the program like this:
-    //   $ ./args arg1 arg2
-    println!("I got {:?} arguments: {:?}.", args.len() - 1, &args[1..]);
-
-    // Print all variantes
-    println!("Account: {:?}", account);
+pub fn read_file() { // read from file
+    let config_file = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
+    let config = File::open(config_file);
+    match config {
+        Ok(config) => {
+            let reader = BufReader::new(config);
+            for line in reader.lines() {
+                match line {
+                    Ok(line) => println!("{}", line),
+                    Err(error) => {
+                        panic!("Error reading line: {}", error)
+                    }
+                }
+            }
+        }
+        Err(error) => match error.kind() {
+            std::io::ErrorKind::NotFound => {
+                panic!("File not found: {}", error)
+            }
+            std::io::ErrorKind::PermissionDenied => {
+                panic!("Opening the file is not allowed: {}", error)
+            }
+            _ => {
+                panic!("Error opening file: {}", error)
+            }
+        }
+    }
 }
