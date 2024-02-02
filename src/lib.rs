@@ -112,13 +112,7 @@ pub fn create_file() -> String {
     }
 }
 
-pub fn set_tenancy(
-    user: &str, 
-    fingerprint: &str,
-    key_file: &str,
-    tenancy: &str,
-    region: Regions,
-) { // write to file
+pub fn set_tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: Regions) { // write to file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
     let path_buf = PathBuf::from(config_path);
     let config_file = path_buf.to_str().expect("Failed to convert path to str");
