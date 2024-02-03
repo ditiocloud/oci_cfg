@@ -1,1 +1,1 @@
-# ocloud-utils
+# oci-config
