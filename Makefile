@@ -13,6 +13,9 @@ build: ## Build the project using cargo
 test: ## Test the project using cargo
 	cargo test
 
+doc: ## Create a documentation for the project using cargo
+	cargo doc
+
 lint: ## Lint the project using cargo
 	@rustup component add clippy 2> /dev/null
 	cargo clippy
