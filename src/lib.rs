@@ -109,6 +109,18 @@ pub fn permissions(config_file: &str) {
 }
 
 /// The create_file function creates a sub-directory in the user's home directory and a config file in the sub-directory.
+/// # Example
+/// This example will create a file in the user's home directory and return the file path as a String. The file path is then used to write the tenancy data to the file. At this point, the file is empty.
+/// ```rust
+/// use oci_config::file;
+/// use oci_config::readf;
+/// 
+/// fn main() {
+///     _ = file();
+///     let config = readf();
+///     println!("{:?}", config);
+/// }
+/// ```
 pub fn file() -> String {
     // Get the user's home directory
     if let Some(user_dirs) = UserDirs::new() {
