@@ -13,7 +13,7 @@ use std::path::PathBuf;
 
 /// The Default struct represents the DEFAULT section of the config file.
 #[derive(Debug)]
-pub struct Default {
+pub struct Account {
     user: String,
     fingerprint: String,
     key_file: String,
@@ -39,14 +39,14 @@ pub enum Regions {
     LON,
 }
 
-impl Default {
+impl Account {
     fn new(
         user: String,
         fingerprint: String,
         key_file: String,
         tenancy: String,
         region: Regions,
-    ) -> Default {
+    ) -> Account {
         Self {
             user,
             fingerprint,
@@ -108,19 +108,7 @@ pub fn permissions(config_file: &str) {
     }
 }
 
-/// The create_file function creates a sub-directory in the user's home directory and a config file in the sub-directory.
-/// # Example
-/// This example will create a file in the user's home directory and return the file path as a String. The file path is then used to write the tenancy data to the file. At this point, the file is empty.
-/// ```rust
-/// use oci_config::file;
-/// use oci_config::readf;
-/// 
-/// fn main() {
-///     _ = file();
-///     let config = readf();
-///     println!("{:?}", config);
-/// }
-/// ```
+/// The file function creates a sub-directory in the user's home directory and a config file in the sub-directory.
 pub fn file() -> String {
     // Get the user's home directory
     if let Some(user_dirs) = UserDirs::new() {
@@ -163,21 +151,21 @@ pub fn file() -> String {
 }
 
 /// The set_tenancy function writes the DEFAULT tenancy data to the config file.
-pub fn default(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: Regions) {
+pub fn account(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: Regions) {
     // write to file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
     // let path_buf = PathBuf::from(config_path);
     let config_file = config_path.to_str().expect("Failed to convert path to str");
     permissions(config_file);
 
-    let default = Default::new(
+    let account = Account::new(
         user.to_string(),
         fingerprint.to_string(),
         key_file.to_string(),
         tenancy.to_string(),
         region,
     );
-    let region = default.home_region();
+    let region = account.home_region();
 
     let config = OpenOptions::new()
         .write(true)
@@ -230,7 +218,7 @@ pub fn admin(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
 }
 
 /// The read_file function reads the content of an existing config file.
-pub fn readf() {
+pub fn read() {
     // read from file
     let config_file = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
     let config = File::open(config_file);
@@ -258,4 +246,25 @@ pub fn readf() {
             }
         },
     }
+}
+
+/// The create function initializes the config file with the user's tenancy and admin data.
+/// The function is called by the oci_config crate.
+/// # Example
+/// This example will create a file in the user's home directory and return the file path as a String. The file path is then used to write the tenancy data to the file. At this point, the file is empty.
+/// ```rust
+/// use oci_config::create;
+/// use oci_config::read;
+/// 
+/// fn main() {
+///     _ = create(user: "ocid1.user.oc1..aaaaaaaaxxxxxx", fingerprint: "xxx", key_file: "path/to/key_file", tenancy: "ocid1.tenancy.oc1..aaaaaaaaxxxxxx", region: "eu-frankfurt-1", pass_phrase: "xxx");
+///     println!("{:?}", config);
+/// }
+/// ```
+ 
+fn create(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: Regions, pass_phrase: &str) {
+    let config_file = file();
+    account(user, fingerprint, key_file, tenancy, region);
+    admin(user, fingerprint, key_file, pass_phrase);
+    read();
 }
