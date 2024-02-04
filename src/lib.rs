@@ -21,9 +21,9 @@ pub struct Account {
     region: Regions, // selection of active regions
 }
 
-/// The Admin struct represents the ADMIN_USER section of the config file.
+/// The Operator struct represents the ADMIN_USER section of the config file.
 #[derive(Debug)]
-pub struct Admin {
+pub struct Operator {
     user: String,
     fingerprint: String,
     key_file: String,
@@ -66,8 +66,8 @@ impl Account {
     }
 }
 
-impl Admin {
-    fn new(user: String, fingerprint: String, key_file: String, pass_phrase: String) -> Admin {
+impl Operator {
+    fn new(user: String, fingerprint: String, key_file: String, pass_phrase: String) -> Operator {
         Self {
             user,
             fingerprint,
@@ -189,7 +189,7 @@ pub fn account(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
 }
 
 /// The add_user function writes the ADMIN_USER data to the config file.
-pub fn admin(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
+pub fn operator(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
     // write to config file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
     // let path_buf = PathBuf::from(config_path);
@@ -265,6 +265,6 @@ pub fn read() {
 fn create(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: Regions, pass_phrase: &str) {
     let config_file = file();
     account(user, fingerprint, key_file, tenancy, region);
-    admin(user, fingerprint, key_file, pass_phrase);
+    operator(user, fingerprint, key_file, pass_phrase);
     read();
 }
