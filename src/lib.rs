@@ -249,7 +249,6 @@ pub fn read() {
 }
 
 /// The create function initializes the config file with the user's tenancy and admin data.
-/// The function is called by the oci_config crate.
 /// # Example
 /// This example will create a file in the user's home directory and return the file path as a String. The file path is then used to write the tenancy data to the file. At this point, the file is empty.
 /// ```rust
@@ -260,9 +259,8 @@ pub fn read() {
 ///     _ = create(user: "ocid1.user.oc1..aaaaaaaaxxxxxx", fingerprint: "xxx", key_file: "path/to/key_file", tenancy: "ocid1.tenancy.oc1..aaaaaaaaxxxxxx", region: "eu-frankfurt-1", pass_phrase: "xxx");
 ///     println!("{:?}", config);
 /// }
-/// ```
- 
-fn create(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: Regions, pass_phrase: &str) {
+/// ``` 
+pub fn create(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: Regions, pass_phrase: &str) {
     let config_file = file();
     account(user, fingerprint, key_file, tenancy, region);
     operator(user, fingerprint, key_file, pass_phrase);
