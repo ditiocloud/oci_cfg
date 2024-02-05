@@ -253,11 +253,17 @@ pub fn read() {
 /// This example will create a file in the user's home directory and return the file path as a String. The file path is then used to write the tenancy data to the file. At this point, the file is empty.
 /// ```rust
 /// use oci_config::create;
-/// use oci_config::read;
+/// use oci_config::Regions;
 /// 
 /// fn main() {
-///     _ = create(user: "ocid1.user.oc1..aaaaaaaaxxxxxx", fingerprint: "xxx", key_file: "path/to/key_file", tenancy: "ocid1.tenancy.oc1..aaaaaaaaxxxxxx", region: "eu-frankfurt-1", pass_phrase: "xxx");
-///     println!("{:?}", config);
+///     _ = create( 
+///         "ocid1.user.oc1..aaaaaaaaxxxxxx", 
+///         "xxx", 
+///         "path/to/key_file", 
+///         "ocid1.tenancy.oc1..aaaaaaaaxxxxxx", 
+///         Regions::FRA, 
+///         "xxx"
+///     );
 /// }
 /// ``` 
 pub fn create(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: Regions, pass_phrase: &str) {
