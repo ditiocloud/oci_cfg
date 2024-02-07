@@ -8,7 +8,12 @@
 /// let home = home(IAD);
 /// ```
 
-/// The Regions enum represents a selection of regions in Oracle Cloud Infrastructure (OCI), made available for the developer.
+/// The enum is used to set the home region for the user. The home region is the region where the user's tenancy is located and is used to set the default region for the user's resources.
+/// # Example
+/// ```rust
+/// use oci_config::Regions;
+/// let home = home(Regions::IAD);
+/// ```
 #[derive(Debug)]
 pub enum Regions {
     SYD,
@@ -51,7 +56,7 @@ pub enum Regions {
     SJC,
 }
 
-// Implement the ToString trait for the Regions enum
+// Implement the ToString trait for the Regions enum.
 impl ToString for Regions {
     fn to_string(&self) -> String {
         match self {
@@ -97,7 +102,12 @@ impl ToString for Regions {
     }
 }
 
-
+/// The home function takes a region code as input and returns the corresponding region as a string.
+/// # Example
+/// ```rust
+/// use oci_config::home;
+/// let home = home("IAD");
+/// ``` 
 pub fn home(code: &str) -> String { // translate region code to string
     // Convert input to lowercase for case-insensitivity
     let input_lowercase = code.to_string().trim().to_lowercase();

@@ -25,14 +25,16 @@
 //! ```
 
 use directories::UserDirs;
-use std::fs;
-use std::fs::File;
 use std::fs::OpenOptions;
-use std::io::prelude::*; // for write_all
-use std::io::{BufRead, BufReader}; // for BufReader
-use std::path::PathBuf;
+use std::io::prelude::*;
 
-/// The Default struct represents the DEFAULT section of the config file.
+pub mod file;
+pub mod region;
+
+use file::{permissions, read};
+use region::home;
+
+/// Represents the DEFAULT section of the config file.
 #[derive(Debug)]
 pub struct Account {
     user: String,
@@ -60,7 +62,7 @@ impl Account {
     }
 }
 
-/// The Operator struct represents the ADMIN_USER section of the config file.
+/// Represents the ADMIN_USER section of the config file.
 #[derive(Debug)]
 pub struct Admin {
     user: String,
@@ -84,7 +86,6 @@ impl Admin {
 pub fn account(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
     // write to file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
-    // let path_buf = PathBuf::from(config_path);
     let config_file = config_path.to_str().expect("Failed to convert path to str");
     permissions(config_file);
 
@@ -122,7 +123,6 @@ pub fn account(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
 pub fn admin(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
     // write to config file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
-    // let path_buf = PathBuf::from(config_path);
     let config_file = config_path.to_str().expect("Failed to convert path to str");
     permissions(config_file);
 
