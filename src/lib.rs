@@ -31,7 +31,7 @@ use std::io::prelude::*;
 pub mod file;
 pub mod region;
 
-use file::{permissions, read};
+use file::permissions;
 use region::home;
 
 /// Represents the DEFAULT section of the config file.

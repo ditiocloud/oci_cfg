@@ -1,29 +1,22 @@
-/// The file function creates a sub-directory and a config file in the user's home directory.
-/// It returns the file path as a String. The file path is used to check the permissions of the file and to read the file.
+
+/// The file module creates a sub-directory in the user's home directory and a config file in the sub-directory. It returns the path of the config file as a String.
 /// # Example
 /// ```rust
 /// use oci_config::file;
-/// use directories::UserDirs;
-/// use std::fs;
-/// use std::fs::File;
-/// use std::io::prelude::*;
-/// use std::io::{BufRead, BufReader};
-/// use std::path::PathBuf;
 /// 
 /// fn main() {
 ///    let config_dir = ".ocloud";
 ///    let config_file = "config";
-///    file(config_dir, config_file);
+///    create(config_dir, config_file);
 /// }
 /// ```
 use directories::UserDirs;
 use std::fs;
 use std::fs::File;
-use std::io::prelude::*;
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
 
-pub fn file(config_dir: &str, config_file: &str) -> String {
+pub fn create(config_dir: &str, config_file: &str) -> String {
     // Get the user's home directory
     if let Some(user_dirs) = UserDirs::new() {
         println!("Home directory: {:?}", user_dirs.home_dir());

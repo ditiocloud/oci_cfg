@@ -7,13 +7,6 @@
 /// use oci_config::Regions
 /// let home = home(IAD);
 /// ```
-
-/// The enum is used to set the home region for the user. The home region is the region where the user's tenancy is located and is used to set the default region for the user's resources.
-/// # Example
-/// ```rust
-/// use oci_config::Regions;
-/// let home = home(Regions::IAD);
-/// ```
 #[derive(Debug)]
 pub enum Regions {
     SYD,
@@ -56,12 +49,12 @@ pub enum Regions {
     SJC,
 }
 
-// Implement the ToString trait for the Regions enum.
+/// Implement the ToString trait for the Regions enum.
 impl ToString for Regions {
     fn to_string(&self) -> String {
         match self {
             Regions::IAD => String::from("us-ashburn-1"),
-            Regions::LON => String::from("uk-london-1"),
+            Regions::LHR => String::from("uk-london-1"),
             Regions::PHX => String::from("us-phoenix-1"),
             Regions::FRA => String::from("eu-frankfurt-1"),
             Regions::SYD => String::from("ap-sydney-1"),
@@ -117,7 +110,7 @@ pub fn home(code: &str) -> String { // translate region code to string
         "iad" => Regions::IAD,
         "fra" => Regions::FRA,
         "phx" => Regions::PHX,
-        "lon" => Regions::LON,
+        "lon" => Regions::LHR,
         _ => {
             println!("Invalid code.");
             std::process::exit(1);
