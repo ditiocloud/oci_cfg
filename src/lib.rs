@@ -7,14 +7,14 @@
 //! ```rust
 //! fn main() {
 //! file()
-//! account(
+//! acc(
 //!     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 //!     "xxx",
 //!     "path/to/key_file",
 //!     "ocid1.tenancy.oc1..aaaaaaaaxxxxxx",
 //!     "IAD",
 //! );
-//! admin(
+//! usr(
 //!     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 //!     "xxx",
 //!     "path/to/key_file",
@@ -30,13 +30,17 @@ use std::io::prelude::*;
 
 pub mod file;
 pub mod region;
+pub mod config;
 
 use file::permissions;
+use file::create;
+use file::read;
+use region::Regions;
 use region::home;
 
 /// Represents the DEFAULT section of the config file.
 #[derive(Debug)]
-pub struct Account {
+pub struct Acc {
     user: String,
     fingerprint: String,
     key_file: String,
@@ -44,14 +48,14 @@ pub struct Account {
     region: String, // selection of active regions
 }
 
-impl Account {
+impl Acc {
     fn new(
         user: String,
         fingerprint: String,
         key_file: String,
         tenancy: String,
         region: String,
-    ) -> Account {
+    ) -> Acc {
         Self {
             user,
             fingerprint,
@@ -64,15 +68,15 @@ impl Account {
 
 /// Represents the ADMIN_USER section of the config file.
 #[derive(Debug)]
-pub struct Admin {
+pub struct Usr {
     user: String,
     fingerprint: String,
     key_file: String,
     pass_phrase: String,
 }
 
-impl Admin {
-    fn new(user: String, fingerprint: String, key_file: String, pass_phrase: String) -> Admin {
+impl Usr {
+    fn new(user: String, fingerprint: String, key_file: String, pass_phrase: String) -> Usr {
         Self {
             user,
             fingerprint,
@@ -83,20 +87,11 @@ impl Admin {
 }
 
 /// The set_tenancy function writes the DEFAULT tenancy data to the config file.
-pub fn account(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
+pub fn acc(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
     // write to file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
     let config_file = config_path.to_str().expect("Failed to convert path to str");
     permissions(config_file);
-
-    let account = 
-    Account::new(
-        user.to_string(),
-        fingerprint.to_string(),
-        key_file.to_string(),
-        tenancy.to_string(),
-        region.to_string(),
-    );
 
     let config = OpenOptions::new()
         .write(true)
@@ -120,7 +115,7 @@ pub fn account(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
 }
 
 /// The add_user function writes the ADMIN_USER data to the config file.
-pub fn admin(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
+pub fn usr(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
     // write to config file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
     let config_file = config_path.to_str().expect("Failed to convert path to str");

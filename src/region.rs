@@ -1,11 +1,12 @@
 
-/// The Regions modul presents the active regions to the developer. Regions are represented as an enum, and the active region is selected by the user.
-/// The active region is then translated to a string, and used to set the home region for the user. The home region is the region where the user's tenancy is located.
-/// The home region is also used to set the default region for the user's resources.
+//! The region modul presents the active regions to the developer. Regions are represented as an enum, and the active region is selected by the user.
+//! The active region is then translated to a string, and used to set the home region for the user. The home region is the region where the user's tenancy is located.
+//! The home region is also used to set the default region for the user's resources.
 /// # Example:
 /// ```rust
-/// use oci_config::Regions
-/// let home = home(IAD);
+/// use oci_config::region::Regions;
+/// use oci_config::region::home;
+/// let home = home("IAD");
 /// ```
 #[derive(Debug)]
 pub enum Regions {

@@ -1,8 +1,15 @@
 
-/// The file module creates a sub-directory in the user's home directory and a config file in the sub-directory. It returns the path of the config file as a String.
+//! The file module contains helper functions to  create a file, read the content and check the permissions of the file that stores the API configuration in the user's home directory. 
+use directories::UserDirs;
+use std::fs;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+use std::path::PathBuf;
+
+/// The file function creates a sub-directory and the configuration file in the sub-directoryin of a user's home. It returns the path of the config file as a String.
 /// # Example
 /// ```rust
-/// use oci_config::file;
+/// use oci_config::file::create;
 /// 
 /// fn main() {
 ///    let config_dir = ".ocloud";
@@ -10,12 +17,6 @@
 ///    create(config_dir, config_file);
 /// }
 /// ```
-use directories::UserDirs;
-use std::fs;
-use std::fs::File;
-use std::io::{BufRead, BufReader};
-use std::path::PathBuf;
-
 pub fn create(config_dir: &str, config_file: &str) -> String {
     // Get the user's home directory
     if let Some(user_dirs) = UserDirs::new() {
@@ -57,16 +58,11 @@ pub fn create(config_dir: &str, config_file: &str) -> String {
     }
 }
 
-/// The permissions function checks the permissions of an existing config file. It returns a message indicating whether the file can be read.
+/// The permissions function checks whether rust can write data into an existing config file. It returns a message indicating whether the file can be opened.
 /// # Example
 /// ```rust
-/// use oci_config::permissions;
 /// use directories::UserDirs;
-/// use std::fs;
-/// use std::fs::File;
-/// use std::io::prelude::*;
-/// use std::io::{BufRead, BufReader};
-/// use std::path::PathBuf;
+/// use oci_config::file::permissions;
 /// 
 /// fn main() {
 ///   let config_file = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
@@ -106,13 +102,8 @@ pub fn permissions(config_file: &str) {
 /// The read function reads and returns the content of an existing config file.
 /// # Example
 /// ```rust
-/// use oci_config::read;
 /// use directories::UserDirs;
-/// use std::fs;
-/// use std::fs::File;
-/// use std::io::prelude::*;
-/// use std::io::{BufRead, BufReader};
-/// use std::path::PathBuf;
+/// use oci_config::file::read;
 /// 
 /// fn main() {
 ///     let config_file = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
