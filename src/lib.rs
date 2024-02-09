@@ -17,9 +17,9 @@ pub mod region;
 pub mod config;
 pub mod account;
 
-use account::{add_tenancy, add_user};
-use file::{create, permissions, read};
-use region::{Regions, home};
+use account::{root_compartment, admin};
+use file::{create, access, read};
+use region::{Regions, identifier};
 
 /// The write function creates a sub-directory in the user's home and writes the required default into the config file.
 /// # Example
@@ -54,7 +54,7 @@ pub fn write() {
 /// ```
 pub fn add_tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
     permissions();
-    tenancy(
+    root_compartment(
         user, 
         fingerprint, 
         key_file, 
@@ -79,7 +79,7 @@ pub fn add_tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str,
 /// ```
 pub fn add_user(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
     permissions();
-    user(
+    admin(
         user, 
         fingerprint, 
         key_file, 
@@ -94,7 +94,13 @@ pub fn content() {
 
 /// The check_permissions function checks whether rust can write data into an existing config file. It returns a message indicating whether the file can be opened.
 pub fn permissions() {
-    let config_path = UserDirs::new().unwrap().home_dir().join(config_file);
-    let config_file = config_path.to_str().expect("Failed to convert path to str");
-    permissions(".ocloud/config");
+    access(".ocloud/config");
+}
+
+pub fn region_identifier(code: &str) {
+    identifier(code);
+}
+
+pub fn list_regions() {
+    list_region_options();
 }

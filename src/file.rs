@@ -66,10 +66,12 @@ pub fn create(config_dir: &str, config_file: &str) -> String {
 /// 
 /// fn main() {
 ///   let config_file = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
-///   permissions(config_file.to_str().unwrap());
+///   access(config_file.to_str().unwrap());
 /// }
 /// ```
-pub fn permissions(config_file: &str) {
+pub fn access(file_path: &str) {
+    let config_path = UserDirs::new().unwrap().home_dir().join(file_path);
+    let config_file = config_path.to_str().expect("Failed to convert path to str");
     // test file permissions
     let config = File::open(config_file);
     match config {

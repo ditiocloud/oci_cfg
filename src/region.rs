@@ -100,14 +100,14 @@ impl ToString for Regions {
 /// # Example
 /// ```rust
 /// use oci_config::home;
-/// let home = home("IAD");
+/// let home = identifier("IAD");
 /// ``` 
-pub fn home(code: &str) -> String { // translate region code to string
+pub fn identifier(code: &str) -> String { // translate region code to string
     // Convert input to lowercase for case-insensitivity
     let input_lowercase = code.to_string().trim().to_lowercase();
 
     // Match the input with the Coin enum
-    let home = match input_lowercase.as_str() {
+    let code = match input_lowercase.as_str() {
         "iad" => Regions::IAD,
         "fra" => Regions::FRA,
         "phx" => Regions::PHX,
@@ -118,6 +118,161 @@ pub fn home(code: &str) -> String { // translate region code to string
         }
     };
     // Convert the enum variant to a string and print
-    let home_string = home.to_string();
-    home_string
+    let ident = code.to_string();
+    ident
+}
+
+pub fn list_region_options() {
+    match Regions::IAD {
+        Regions::IAD => println!("IAD - Ashburn, US"),
+        _ => unreachable!(), // This line is required to make the match exhaustive
+    };
+    match Regions::LHR {
+        Regions::LHR => println!("LHR - London, UK"),
+        _ => unreachable!(),
+    };
+    match Regions::PHX {
+        Regions::PHX => println!("PHX - Phoenix, US"),
+        _ => unreachable!(),
+    };
+    match Regions::FRA {
+        Regions::FRA => println!("FRA - Frankfurt, DE"),
+        _ => unreachable!(),
+    };
+    match Regions::SYD {
+        Regions::SYD => println!("SYD - Sydney, AU"),
+        _ => unreachable!(),
+    };
+    match Regions::MEL {
+        Regions::MEL => println!("MEL - Melbourne, AU"),
+        _ => unreachable!(),
+    };
+    match Regions::GRU {
+        Regions::GRU => println!("GRU - Sao Paulo, BR"),
+        _ => unreachable!(),
+    };
+    match Regions::VCP {
+        Regions::VCP => println!("VCP - Vinhedo, BR"),
+        _ => unreachable!(),
+    };
+    match Regions::YUL {
+        Regions::YUL => println!("YUL - Montreal, CA"),
+        _ => unreachable!(),
+    };
+    match Regions::YYZ {
+        Regions::YYZ => println!("YYZ - Toronto, CA"),
+        _ => unreachable!(),
+    };
+    match Regions::SCL {
+        Regions::SCL => println!("SCL - Santiago, CL"),
+        _ => unreachable!(),
+    };
+    match Regions::VAP {
+        Regions::VAP => println!("VAP - Valparaiso, CL"),
+        _ => unreachable!(),
+    };
+    match Regions::BOG {
+        Regions::BOG => println!("BOG - Bogota, CO"),
+        _ => unreachable!(),
+    };
+    match Regions::CDG {
+        Regions::CDG => println!("CDG - Paris, FR"),
+        _ => unreachable!(),
+    };
+    match Regions::MRS {
+        Regions::MRS => println!("MRS - Marseille, FR"),
+        _ => unreachable!(),
+    };
+    match Regions::HYD {
+        Regions::HYD => println!("HYD - Hyderabad, IN"),
+        _ => unreachable!(),
+    };
+    match Regions::BOM {
+        Regions::BOM => println!("BOM - Mumbai, IN"),
+        _ => unreachable!(),
+    };
+    match Regions::MTZ {
+        Regions::MTZ => println!("MTZ - Jerusalem, IL"),
+        _ => unreachable!(),
+    };
+    match Regions::LIN {
+        Regions::LIN => println!("LIN - Milan, IT"),
+        _ => unreachable!(),
+    };
+    match Regions::KIX {
+        Regions::KIX => println!("KIX - Osaka, JP"),
+        _ => unreachable!(),
+    };
+    match Regions::NRT {
+        Regions::NRT => println!("NRT - Tokyo, JP"),
+        _ => unreachable!(),
+    };
+    match Regions::QRO {
+        Regions::QRO => println!("QRO - Queretaro, MX"),
+        _ => unreachable!(),
+    };
+    match Regions::MTY {
+        Regions::MTY => println!("MTY - Monterrey, MX"),
+        _ => unreachable!(),
+    };
+    match Regions::AMS {
+        Regions::AMS => println!("AMS - Amsterdam, NL"),
+        _ => unreachable!(),
+    };
+    match Regions::JED {
+        Regions::JED => println!("JED - Jeddah, SA"),
+        _ => unreachable!(),
+    };
+    match Regions::BEG {
+        Regions::BEG => println!("BEG - Jovanovac, RS"),
+        _ => unreachable!(),
+    };
+    match Regions::SIN {
+        Regions::SIN => println!("SIN - Singapore, SG"),
+        _ => unreachable!(),
+    };
+    match Regions::JNB {
+        Regions::JNB => println!("JNB - Johannesburg, ZA"),
+        _ => unreachable!(),
+    };
+    match Regions::ICN {
+        Regions::ICN => println!("ICN - Seoul, KR"),
+        _ => unreachable!(),
+    };
+    match Regions::YNY {
+        Regions::YNY => println!("YNY - Chuncheon, KR"),
+        _ => unreachable!(),
+    };
+    match Regions::MAD {
+        Regions::MAD => println!("MAD - Madrid, ES"),
+        _ => unreachable!(),
+    };
+    match Regions::ARN {
+        Regions::ARN => println!("ARN - Stockholm, SE"),
+        _ => unreachable!(),
+    };
+    match Regions::ZRH {
+        Regions::ZRH => println!("ZRH - Zurich, CH"),
+        _ => unreachable!(),
+    };
+    match Regions::AUH {
+        Regions::AUH => println!("AUH - Abu Dhabi, AE"),
+        _ => unreachable!(),
+    };
+    match Regions::DXB {
+        Regions::DXB => println!("DXB - Dubai, AE"),
+        _ => unreachable!(),
+    };
+    match Regions::CWL {
+        Regions::CWL => println!("CWL - Cardiff, UK"),
+        _ => unreachable!(),
+    };
+    match Regions::ORD {
+        Regions::ORD => println!("ORD - Chicago, US"),
+        _ => unreachable!(),
+    };
+    match Regions::SJC {
+        Regions::SJC => println!("SJC - San Jose, US"),
+        _ => unreachable!(),
+    };
 }
