@@ -110,7 +110,9 @@ pub fn permissions(config_file: &str) {
 ///     read(config_file.to_str().unwrap());
 /// }
 /// ```
-pub fn read(config_file: &str) {
+pub fn read(file_path: &str) {
+    let config_path = UserDirs::new().unwrap().home_dir().join(file_path);
+    let config_file = config_path.to_str().expect("Failed to convert path to str");
     // read from file
     let config = File::open(config_file);
     match config {

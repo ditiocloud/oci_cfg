@@ -13,19 +13,13 @@
 use directories::UserDirs;
 
 pub mod file;
-pub mod user;
 pub mod region;
 pub mod config;
-pub mod tenancy;
+pub mod account;
 
-use file::permissions;
-use file::create;
-use file::read;
-use region::Regions;
-use region::home;
-
-use tenancy::acc;
-use user::usr;
+use account::{add_tenancy, add_user};
+use file::{create, permissions, read};
+use region::{Regions, home};
 
 /// The write function creates a sub-directory in the user's home and writes the required default into the config file.
 /// # Example
@@ -49,7 +43,7 @@ pub fn write() {
 /// use oci_config::tenancy;
 /// 
 /// fn main() {
-///    tenancy(
+///    add_tenancy(
 ///     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 ///     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 ///     "path/to/private/key",
@@ -58,9 +52,9 @@ pub fn write() {
 ///    );
 /// }
 /// ```
-pub fn tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
+pub fn add_tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
     permissions();
-    acc(
+    tenancy(
         user, 
         fingerprint, 
         key_file, 
@@ -75,7 +69,7 @@ pub fn tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
 /// use oci_config::user;
 /// 
 /// fn main() {
-///    user(
+///    add_user(
 ///     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 ///     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 ///     "path/to/private/key",
@@ -83,7 +77,7 @@ pub fn tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
 ///    );
 /// }
 /// ```
-pub fn user(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
+pub fn add_user(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
     permissions();
     user(
         user, 
@@ -94,15 +88,13 @@ pub fn user(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
 }
 
 /// The read function reads the content of the config file and returns the content as a String.
-pub fn read() {
-    let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
-    let config_file = config_path.to_str().expect("Failed to convert path to str");
-    read(config_file);
+pub fn content() {
+    read(".ocloud/config");
 }
 
 /// The check_permissions function checks whether rust can write data into an existing config file. It returns a message indicating whether the file can be opened.
 pub fn permissions() {
-    let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
+    let config_path = UserDirs::new().unwrap().home_dir().join(config_file);
     let config_file = config_path.to_str().expect("Failed to convert path to str");
-    permissions(config_file);
+    permissions(".ocloud/config");
 }
