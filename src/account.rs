@@ -21,7 +21,7 @@
 use directories::UserDirs;
 use std::fs::OpenOptions;
 use std::io::prelude::*;
-use oci_config::region::identifier;
+use crate::region::identifier;
 
 /// Represents the DEFAULT section of the config file.
 #[derive(Debug)]

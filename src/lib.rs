@@ -10,6 +10,9 @@
 //! }
 //! ```
 
+use std::path;
+use std::path::PathBuf;
+
 use directories::UserDirs;
 
 pub mod file;
@@ -19,7 +22,10 @@ pub mod account;
 
 use account::{root_compartment, admin};
 use file::{create, access, read};
-use region::{Regions, identifier};
+use region::{active_regions, identifier};
+
+static DIR: &str = ".ocloud";
+static NAME: &str = "config";
 
 /// The write function creates a sub-directory in the user's home and writes the required default into the config file.
 /// # Example
@@ -27,13 +33,13 @@ use region::{Regions, identifier};
 /// use oci_config::write;
 /// 
 /// fn main() {
-///     let _ = write();
+///     let _ = init();
 /// }
 /// ```
-pub fn write() {
+pub fn init() {
     create(
-        ".ocloud",
-        "config"
+        DIR,
+        NAME
     );
 }
 
@@ -43,7 +49,7 @@ pub fn write() {
 /// use oci_config::tenancy;
 /// 
 /// fn main() {
-///    add_tenancy(
+///    tenancyadd(
 ///     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 ///     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 ///     "path/to/private/key",
@@ -52,15 +58,31 @@ pub fn write() {
 ///    );
 /// }
 /// ```
-pub fn add_tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
-    permissions();
-    root_compartment(
-        user, 
-        fingerprint, 
-        key_file, 
-        tenancy, 
-        region
-    );
+pub fn tenancyadd(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
+    let mut path = PathBuf::from(DIR);
+    path.push(NAME);
+
+    if access(&path) {
+        root_compartment(
+            user, 
+            fingerprint, 
+            key_file, 
+            tenancy, 
+            region
+        );
+    } else {
+        create(
+            DIR,
+            NAME
+        );
+        root_compartment(
+            user, 
+            fingerprint, 
+            key_file, 
+            tenancy, 
+            region
+        );
+    }
 }
 
 /// The user function writes user data for a defined tenancy into the config file.
@@ -69,7 +91,7 @@ pub fn add_tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str,
 /// use oci_config::user;
 /// 
 /// fn main() {
-///    add_user(
+///    useradd(
 ///     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 ///     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 ///     "path/to/private/key",
@@ -77,8 +99,8 @@ pub fn add_tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str,
 ///    );
 /// }
 /// ```
-pub fn add_user(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
-    permissions();
+pub fn useradd(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
+    access(".ocloud/config");
     admin(
         user, 
         fingerprint, 
@@ -88,19 +110,41 @@ pub fn add_user(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str
 }
 
 /// The read function reads the content of the config file and returns the content as a String.
+/// # Example
+/// ```rust
+/// use oci_config::content;
+/// content();
+/// ```
 pub fn content() {
     read(".ocloud/config");
 }
 
 /// The check_permissions function checks whether rust can write data into an existing config file. It returns a message indicating whether the file can be opened.
+/// # Example
+/// ```rust
+/// use oci_config::permissions;
+/// permissions();
+/// ```
 pub fn permissions() {
     access(".ocloud/config");
 }
 
-pub fn region_identifier(code: &str) {
-    identifier(code);
+/// The region_identifier function takes a region code as input and returns the corresponding region as a string.
+/// # Example
+/// ```rust
+/// use oci_config::region_identifier;
+/// let home_region = home("IAD");
+/// ```
+pub fn home(region: &str) {
+    identifier(region);
 }
 
-pub fn list_regions() {
-    list_region_options();
+/// The list_regions function lists all the active regions.
+/// # Example
+/// ```rust
+/// use oci_config::list_regions;
+/// regionlist();
+/// ```
+pub fn regionlist() {
+    active_regions();
 }

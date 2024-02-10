@@ -96,12 +96,12 @@ impl ToString for Regions {
     }
 }
 
-/// The home function takes a region code as input and returns the corresponding region as a string.
+/// The home identifier function takes a region code as input and returns the corresponding region as a string.
 /// # Example
 /// ```rust
-/// use oci_config::home;
+/// use oci_config::region::identifier;
 /// let home = identifier("IAD");
-/// ``` 
+/// ```
 pub fn identifier(code: &str) -> String { // translate region code to string
     // Convert input to lowercase for case-insensitivity
     let input_lowercase = code.to_string().trim().to_lowercase();
@@ -122,7 +122,13 @@ pub fn identifier(code: &str) -> String { // translate region code to string
     ident
 }
 
-pub fn list_region_options() {
+/// The list_regions function lists all the active regions.
+/// # Example
+/// ```rust
+/// use oci_config::active_regions;
+/// active_regions();
+/// ```
+pub fn active_regions() {
     match Regions::IAD {
         Regions::IAD => println!("IAD - Ashburn, US"),
         _ => unreachable!(), // This line is required to make the match exhaustive
