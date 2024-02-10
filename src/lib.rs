@@ -31,7 +31,7 @@ pub mod account;
 
 use std::path::PathBuf;
 use account::{root_compartment, admin};
-use file::{create, access, read};
+use file::{create, permissions, read};
 
 static DIR: &str = ".ocloud";
 static NAME: &str = "config";
@@ -65,7 +65,7 @@ pub fn tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
             region
         );
     } else {
-        access(path.to_str().unwrap());
+        permissions(path.to_str().unwrap());
         root_compartment(
             user, 
             fingerprint, 
@@ -94,7 +94,7 @@ pub fn user(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
     let mut path = PathBuf::from(DIR);
     path.push(NAME);
 
-    access(path.to_str().unwrap());
+    permissions(path.to_str().unwrap());
     admin(
         user, 
         fingerprint, 
