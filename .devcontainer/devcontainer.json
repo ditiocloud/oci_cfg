@@ -14,7 +14,20 @@
 				"rust-lang.rust-analyzer",
 				"vadimcn.vscode-lldb",
 				"GitHub.copilot",
-				"ms-vscode-remote.remote-containers"
+				"ms-vscode-remote.remote-containers",
+				"serayuzgur.crates",
+				"ms-azuretools.vscode-docker",
+				"oderwat.indent-rainbow",
+				"ritwickdey.LiveServer",
+				"ms-vscode.makefile-tools",
+				"1YiB.rust-bundle",
+				"dustypomerleau.rust-syntax",
+				"vscode-icons-team.vscode-icons",
+				"dandric.vscode-jq",
+				"redhat.vscode-yaml",
+				"DavidAnson.vscode-markdownlint",
+				"shd101wyy.markdown-preview-enhanced",
+				"esbenp.prettier-vscode"
 			],
 			"settings": {
 				"rust-analyzer.cargo.autoreload": true
