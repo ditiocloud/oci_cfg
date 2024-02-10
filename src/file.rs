@@ -74,6 +74,7 @@ pub fn access(file_path: &str) {
     let config_file = config_path.to_str().expect("Failed to convert path to str");
     // test file permissions
     let config = File::open(config_file);
+    println!("accessing file: {:?}", config);
     match config {
         Ok(config) => {
             let reader = BufReader::new(config);
