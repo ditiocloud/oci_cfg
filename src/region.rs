@@ -1,15 +1,17 @@
 
-//! The region modul presents the active regions to the developer. Regions are represented as an enum, and the active region is selected by the user.
-//! The active region is then translated to a string, and used to set the home region for the user. The home region is the region where the user's tenancy is located.
-//! The home region is also used to set the default region for the user's resources.
-/// # Example:
-/// ```rust
-/// use oci_config::region::Codes;
-/// use oci_config::region::home;
-/// let home = home("IAD");
-/// ```
+//! The region converts region codes into the corresponding identifier. Regions are represented as an enum and a given code is translated to a string that represents the home region in the tenancy profile. 
+//! The home region is the region where the user's tenancy is located, it is used to set the default region for the user's resources.
+//! # Example:
+//! ```rust
+//! use oci_config::region::{home, list};
+//! 
+//! let home = identifier("IAD");
+//! let regions = identifiers();
+//! println!("The home region identifier is: {}", home);
+//! println!("The following regions can be converted with this module: {}", regions);
+//! ```
 #[derive(Debug)]
-pub enum Codes {
+enum Codes {
     SYD,
     MEL,
     GRU,
@@ -54,49 +56,49 @@ pub enum Codes {
 impl ToString for Codes {
     fn to_string(&self) -> String {
         match self {
-            Regions::IAD => String::from("us-ashburn-1"),
-            Regions::LHR => String::from("uk-london-1"),
-            Regions::PHX => String::from("us-phoenix-1"),
-            Regions::FRA => String::from("eu-frankfurt-1"),
-            Regions::SYD => String::from("ap-sydney-1"),
-            Regions::MEL => String::from("ap-melbourne-1"),
-            Regions::GRU => String::from("sa-saopaulo-1"),
-            Regions::VCP => String::from("sa-vinhedo-1"),
-            Regions::YUL => String::from("ca-montreal-1"),
-            Regions::YYZ => String::from("ca-toronto-1"),
-            Regions::SCL => String::from("sa-santiago-1"),
-            Regions::VAP => String::from("sa-valparaiso-1"),
-            Regions::BOG => String::from("sa-bogota-1"),
-            Regions::CDG => String::from("eu-paris-1"),
-            Regions::MRS => String::from("eu-marseille-1"),
-            Regions::HYD => String::from("ap-hyderabad-1"),
-            Regions::BOM => String::from("ap-mumbai-1"),
-            Regions::MTZ => String::from("il-jerusalem-1"),
-            Regions::LIN => String::from("eu-milan-1"),
-            Regions::KIX => String::from("ap-osaka-1"),
-            Regions::NRT => String::from("ap-tokyo-1"),
-            Regions::QRO => String::from("mx-queretaro-1"),
-            Regions::MTY => String::from("mx-monterrey-1"),
-            Regions::AMS => String::from("eu-amsterdam-1"),
-            Regions::JED => String::from("me-jeddah-1"),
-            Regions::BEG => String::from("eu-jovanovac-1"),
-            Regions::SIN => String::from("ap-singapore-1"),
-            Regions::JNB => String::from("af-johannesburg-1"),
-            Regions::ICN => String::from("ap-seoul-1"),
-            Regions::YNY => String::from("ap-chuncheon-1"),
-            Regions::MAD => String::from("eu-madrid-1"),
-            Regions::ARN => String::from("eu-stockholm-1"),
-            Regions::ZRH => String::from("eu-zurich-1"),
-            Regions::AUH => String::from("me-abudhabi-1"),
-            Regions::DXB => String::from("me-dubai-1"),
-            Regions::CWL => String::from("uk-cardiff-1"),
-            Regions::ORD => String::from("us-chicago-1"),
-            Regions::SJC => String::from("us-sanjose-1"),
+            Codes::IAD => String::from("us-ashburn-1"),
+            Codes::LHR => String::from("uk-london-1"),
+            Codes::PHX => String::from("us-phoenix-1"),
+            Codes::FRA => String::from("eu-frankfurt-1"),
+            Codes::SYD => String::from("ap-sydney-1"),
+            Codes::MEL => String::from("ap-melbourne-1"),
+            Codes::GRU => String::from("sa-saopaulo-1"),
+            Codes::VCP => String::from("sa-vinhedo-1"),
+            Codes::YUL => String::from("ca-montreal-1"),
+            Codes::YYZ => String::from("ca-toronto-1"),
+            Codes::SCL => String::from("sa-santiago-1"),
+            Codes::VAP => String::from("sa-valparaiso-1"),
+            Codes::BOG => String::from("sa-bogota-1"),
+            Codes::CDG => String::from("eu-paris-1"),
+            Codes::MRS => String::from("eu-marseille-1"),
+            Codes::HYD => String::from("ap-hyderabad-1"),
+            Codes::BOM => String::from("ap-mumbai-1"),
+            Codes::MTZ => String::from("il-jerusalem-1"),
+            Codes::LIN => String::from("eu-milan-1"),
+            Codes::KIX => String::from("ap-osaka-1"),
+            Codes::NRT => String::from("ap-tokyo-1"),
+            Codes::QRO => String::from("mx-queretaro-1"),
+            Codes::MTY => String::from("mx-monterrey-1"),
+            Codes::AMS => String::from("eu-amsterdam-1"),
+            Codes::JED => String::from("me-jeddah-1"),
+            Codes::BEG => String::from("eu-jovanovac-1"),
+            Codes::SIN => String::from("ap-singapore-1"),
+            Codes::JNB => String::from("af-johannesburg-1"),
+            Codes::ICN => String::from("ap-seoul-1"),
+            Codes::YNY => String::from("ap-chuncheon-1"),
+            Codes::MAD => String::from("eu-madrid-1"),
+            Codes::ARN => String::from("eu-stockholm-1"),
+            Codes::ZRH => String::from("eu-zurich-1"),
+            Codes::AUH => String::from("me-abudhabi-1"),
+            Codes::DXB => String::from("me-dubai-1"),
+            Codes::CWL => String::from("uk-cardiff-1"),
+            Codes::ORD => String::from("us-chicago-1"),
+            Codes::SJC => String::from("us-sanjose-1"),
         }
     }
 }
 
-/// The home identifier function takes a region code as input and returns the corresponding region as a string.
+/// The identifier function converts a given region code to the corresponding region identifier as a string.
 /// # Example
 /// ```rust
 /// use oci_config::region::identifier;
@@ -109,9 +111,43 @@ pub fn identifier(code: &str) -> String { // translate region code to string
     // Match the input with the Coin enum
     let code = match input_lowercase.as_str() {
         "iad" => Codes::IAD,
-        "fra" => Codes::FRA,
-        "phx" => Codes::PHX,
         "lon" => Codes::LHR,
+        "phx" => Codes::PHX,
+        "fra" => Codes::FRA,
+        "syd" => Codes::SYD,
+        "mel" => Codes::MEL,
+        "gru" => Codes::GRU,
+        "vcp" => Codes::VCP,
+        "yul" => Codes::YUL,
+        "yyz" => Codes::YYZ,
+        "scl" => Codes::SCL,
+        "vap" => Codes::VAP,
+        "bog" => Codes::BOG,
+        "cdg" => Codes::CDG,
+        "mrs" => Codes::MRS,
+        "hyd" => Codes::HYD,
+        "bom" => Codes::BOM,
+        "mtz" => Codes::MTZ,
+        "lin" => Codes::LIN,
+        "kix" => Codes::KIX,
+        "nrt" => Codes::NRT,
+        "qro" => Codes::QRO,
+        "mty" => Codes::MTY,
+        "ams" => Codes::AMS,
+        "jed" => Codes::JED,
+        "beg" => Codes::BEG,
+        "sin" => Codes::SIN,
+        "jnb" => Codes::JNB,
+        "icn" => Codes::ICN,
+        "yny" => Codes::YNY,
+        "mad" => Codes::MAD,
+        "arn" => Codes::ARN,
+        "zrh" => Codes::ZRH,
+        "auh" => Codes::AUH,
+        "dxb" => Codes::DXB,
+        "cwl" => Codes::CWL,
+        "ord" => Codes::ORD,
+        "sjc" => Codes::SJC,
         _ => {
             println!("Invalid code.");
             std::process::exit(1);
@@ -122,13 +158,13 @@ pub fn identifier(code: &str) -> String { // translate region code to string
     id
 }
 
-/// The list_regions function lists all the active regions.
+/// The identifiers function lists all regions enabled in the module.
 /// # Example
 /// ```rust
-/// use oci_config::active_regions;
-/// regions();
+/// use oci_config::region::list;
+/// identifiers();
 /// ```
-pub fn regions() {
+pub fn identifiers() {
     match Codes::IAD {
         Codes::IAD => println!("IAD - Ashburn, US"),
         _ => unreachable!(), // This line is required to make the match exhaustive

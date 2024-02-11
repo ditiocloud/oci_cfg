@@ -5,7 +5,7 @@
 //! More information about the config file itself can be found in the official documentation under: <https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm>
 //! # Example
 //! ```rust
-//! use oci_config::{defaults, admin, report};
+//! use oci_config_writer::{defaults, admin, report};
 //! 
 //! fn main() {
 //!    profile(
@@ -36,7 +36,7 @@ use file::{create, permissions, read};
 static DIR: &str = ".ocloud";
 static NAME: &str = "config";
 
-/// The profile function writes the account profile to the config file. It is used grant access to a tenancy.
+/// writes an account profile to the config file, the values are used as defaults for admin users.
 /// # Example
 /// ```rust
 /// fn main() {
@@ -74,7 +74,7 @@ pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
     }
 }
 
-/// The credentials function adds user credentials for a user to the config file and provides access to a defined tenancy.
+/// adds user credentials to the config file to authenticate the user and to provide access to a defined tenancy.
 /// # Example
 /// ```rust
 /// 
@@ -100,10 +100,10 @@ pub fn credentials(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &
     );
 }
 
-/// The read function reads the content of the config file and returns the content as a String.
+/// reads and returns the content of a config file as a string.
 /// # Example
 /// ```rust
-/// use oci_config::content;
+/// use oci_config_writer::content;
 /// fn main() {
 ///   report();
 /// }

@@ -1,5 +1,18 @@
 
-//! The file module contains helper functions to  create a file, read the content and check the permissions of the file that stores the API configuration in the user's home directory. 
+//! The file module contains helper functions to  create, read the content and check the permissions of the config file.
+//! It stores the API configuration in a file located in a hidden sub-directory of a user's home. 
+//! # Example
+//! ```rust
+//! use oci_config::file::{create, permissions, read};
+//! 
+//! fn main() {
+//!    let config_dir = ".ocloud";
+//!    let config_file = "config";
+//!    create(config_dir, config_file);
+//!    permissions(config_dir, config_file);
+//!    read(config_dir, config_file);
+//! }
+//! ```
 use directories::UserDirs;
 use std::fs;
 use std::fs::File;

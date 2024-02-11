@@ -1,5 +1,5 @@
-//! The account module captures the basic account data, it writes the user and tenancy information to the config file.
-//! #Example
+//! The account module captures tenancy profiles and writes the default values to the config file. User credentials are written with a separate function to allow for additional admin users to be created.
+//! # Example
 //! ```rust
 //! use oci_config::account::{default, admin};
 //! use oci_config::region::home;
@@ -23,7 +23,7 @@ use std::fs::OpenOptions;
 use std::io::prelude::*;
 use crate::region::identifier;
 
-/// Represents the DEFAULT section of the config file.
+/// represents the DEFAULT section of the config file.
 #[derive(Debug)]
 pub struct Default {
     user: String,
@@ -51,7 +51,7 @@ impl Default {
     }
 }
 
-/// The profile function writes the DEFAULT tenancy data to the config file.
+/// writes the DEFAULT section to the config file.
 pub fn default(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
     // write to file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
@@ -78,7 +78,7 @@ pub fn default(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
     }
 }
 
-/// Represents the ADMIN_USER section of the config file.
+/// represents the ADMIN_USER section of the config file.
 #[derive(Debug)]
 pub struct Admin {
     user: String,
@@ -103,7 +103,7 @@ impl Admin {
     }
 }
 
-/// The add_user function writes the ADMIN_USER data to the config file.
+/// writes the ADMIN_USER section to the config file.
 pub fn admin(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
     // write to config file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
