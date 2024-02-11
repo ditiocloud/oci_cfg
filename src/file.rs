@@ -3,14 +3,16 @@
 //! It stores the API configuration in a file located in a hidden sub-directory of a user's home. 
 //! # Example
 //! ```rust
-//! use oci_config::file::{create, permissions, read};
+//! use oci_config_writer::file::{create, permissions, read};
 //! 
 //! fn main() {
 //!    let config_dir = ".ocloud";
 //!    let config_file = "config";
+//!    let file_path: String = format!("{}/{}", config_dir, config_file);
+//! 
 //!    create(config_dir, config_file);
-//!    permissions(config_dir, config_file);
-//!    read(config_dir, config_file);
+//!    permissions(file_path.as_str());
+//!    read(file_path.as_str());
 //! }
 //! ```
 use directories::UserDirs;
@@ -22,7 +24,7 @@ use std::path::PathBuf;
 /// The file function creates a sub-directory and the configuration file in the sub-directoryin of a user's home. It returns the path of the config file as a String.
 /// # Example
 /// ```rust
-/// use oci_config::file::create;
+/// use oci_config_writer::file::create;
 /// 
 /// fn main() {
 ///    let config_dir = ".ocloud";
@@ -58,7 +60,6 @@ pub fn create(config_dir: &str, config_file: &str) -> String {
         }
 
         // convert file path to String
-        // let path_buf = PathBuf::from(file_path);
         let config_path = file_path
             .to_str()
             .expect("Failed to convert path to str")
@@ -75,7 +76,7 @@ pub fn create(config_dir: &str, config_file: &str) -> String {
 /// # Example
 /// ```rust
 /// use directories::UserDirs;
-/// use oci_config::file::permissions;
+/// use oci_config_writer::file::permissions;
 /// 
 /// fn main() {
 ///   let config_file = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
@@ -119,7 +120,7 @@ pub fn permissions(file_path: &str) {
 /// # Example
 /// ```rust
 /// use directories::UserDirs;
-/// use oci_config::file::read;
+/// use oci_config_writer::file::read;
 /// 
 /// fn main() {
 ///     let config_file = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
@@ -127,6 +128,7 @@ pub fn permissions(file_path: &str) {
 /// }
 /// ```
 pub fn read(file_path: &str) {
+
     let config_path = UserDirs::new().unwrap().home_dir().join(file_path);
     let config_file = config_path.to_str().expect("Failed to convert path to str");
     // read from file

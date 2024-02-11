@@ -5,7 +5,7 @@
 //! More information about the config file itself can be found in the official documentation under: <https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm>
 //! # Example
 //! ```rust
-//! use oci_config_writer::{defaults, admin, report};
+//! use oci_config_writer::{profile, credentials, report};
 //! 
 //! fn main() {
 //!    profile(
@@ -39,6 +39,8 @@ static NAME: &str = "config";
 /// writes an account profile to the config file, the values are used as defaults for admin users.
 /// # Example
 /// ```rust
+/// use oci_config_writer::profile;
+/// 
 /// fn main() {
 ///    profile(
 ///     "ocid1.user.oc1..aaaaaaaaxxxxxx",
@@ -77,6 +79,7 @@ pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
 /// adds user credentials to the config file to authenticate the user and to provide access to a defined tenancy.
 /// # Example
 /// ```rust
+/// use oci_config_writer::credentials;
 /// 
 /// fn main() {
 ///    credentials(
@@ -88,10 +91,9 @@ pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
 /// }
 /// ```
 pub fn credentials(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
-    let mut path = PathBuf::from(DIR);
-    path.push(NAME);
+    let file_path: String = format!("{}/{}", DIR, NAME); 
 
-    permissions(path.to_str().unwrap());
+    permissions(file_path.as_str());
     admin(
         user, 
         fingerprint, 
@@ -103,13 +105,13 @@ pub fn credentials(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &
 /// reads and returns the content of a config file as a string.
 /// # Example
 /// ```rust
-/// use oci_config_writer::content;
+/// use oci_config_writer::report;
+/// 
 /// fn main() {
 ///   report();
 /// }
 /// ```
 pub fn report() {
-    let mut path = PathBuf::from(DIR);
-    path.push(NAME);
-    read(path.to_str().unwrap());
+    let file_path: String = format!("{}/{}", DIR, NAME); 
+    read(file_path.as_str());
 }

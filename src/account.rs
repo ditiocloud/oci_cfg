@@ -1,8 +1,8 @@
 //! The account module captures tenancy profiles and writes the default values to the config file. User credentials are written with a separate function to allow for additional admin users to be created.
 //! # Example
 //! ```rust
-//! use oci_config::account::{default, admin};
-//! use oci_config::region::home;
+//! use oci_config_writer::account::{default, admin};
+//! use oci_config_writer::region::identifier;
 //! 
 //! default(
 //!     "ocid1.user.oc1..aaaaaaaaxxxxxx",
