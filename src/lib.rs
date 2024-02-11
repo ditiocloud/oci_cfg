@@ -8,14 +8,14 @@
 //! use oci_config::{defaults, admin, report};
 //! 
 //! fn main() {
-//!    defaults(
+//!    profile(
 //!     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 //!     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 //!     "path/to/private/key",
 //!     "ocid1.tenancy.oc1..aaaaaaaaxxxxxx",
 //!     "IAD"
 //!    );
-//!    admin(
+//!    credentials(
 //!     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 //!     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 //!     "path/to/private/key",
