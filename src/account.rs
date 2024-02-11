@@ -1,17 +1,17 @@
 //! The account module captures the basic account data, it writes the user and tenancy information to the config file.
 //! #Example
 //! ```rust
-//! use oci_config::account::{tenancy, admin};
+//! use oci_config::account::{profile, credentials};
 //! use oci_config::region::home;
 //! 
-//! tenancy(
+//! profile(
 //!     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 //!     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 //!     "path/to/private/key",
 //!     "ocid1.tenancy.oc1..aaaaaaaaxxxxxx",
 //!     "IAD"
 //! );
-//! admin(
+//! credentials(
 //!     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 //!     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 //!     "path/to/private/key",
@@ -25,7 +25,7 @@ use crate::region::identifier;
 
 /// Represents the DEFAULT section of the config file.
 #[derive(Debug)]
-pub struct RootCompartment {
+pub struct Profile {
     user: String,
     fingerprint: String,
     key_file: String,
@@ -33,14 +33,14 @@ pub struct RootCompartment {
     region: String, // selection of active regions
 }
 
-impl RootCompartment {
+impl Profile {
     fn new(
         user: String,
         fingerprint: String,
         key_file: String,
         tenancy: String,
         region: String,
-    ) -> RootCompartment {
+    ) -> Profile {
         Self {
             user,
             fingerprint,
@@ -51,8 +51,8 @@ impl RootCompartment {
     }
 }
 
-/// The set_tenancy function writes the DEFAULT tenancy data to the config file.
-pub fn root_compartment(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
+/// The profile function writes the DEFAULT tenancy data to the config file.
+pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
     // write to file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
     let config_file = config_path.to_str().expect("Failed to convert path to str");
@@ -80,15 +80,20 @@ pub fn root_compartment(user: &str, fingerprint: &str, key_file: &str, tenancy: 
 
 /// Represents the ADMIN_USER section of the config file.
 #[derive(Debug)]
-pub struct Admin {
+pub struct Credentials {
     user: String,
     fingerprint: String,
     key_file: String,
     pass_phrase: String,
 }
 
-impl Admin {
-    fn new(user: String, fingerprint: String, key_file: String, pass_phrase: String) -> Admin {
+impl Credentials {
+    fn new(
+        user: String, 
+        fingerprint: String, 
+        key_file: String, 
+        pass_phrase: String
+    ) -> Credentials {
         Self {
             user,
             fingerprint,
@@ -99,7 +104,7 @@ impl Admin {
 }
 
 /// The add_user function writes the ADMIN_USER data to the config file.
-pub fn admin(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
+pub fn credentials(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
     // write to config file
     let config_path = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
     let config_file = config_path.to_str().expect("Failed to convert path to str");

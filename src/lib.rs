@@ -5,44 +5,42 @@
 //! More information about the config file itself can be found in the official documentation under: <https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm>
 //! # Example
 //! ```rust
-//! use oci_config::{tenancy, user, content};
+//! use oci_config::{defaults, admin, report};
 //! 
 //! fn main() {
-//!    tenancy(
+//!    defaults(
 //!     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 //!     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 //!     "path/to/private/key",
 //!     "ocid1.tenancy.oc1..aaaaaaaaxxxxxx",
 //!     "IAD"
 //!    );
-//!    user(
+//!    admin(
 //!     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 //!     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 //!     "path/to/private/key",
 //!     "passphrase"
 //!    );
-//!     content();
+//!    report();
 //! }
 //! ```
 pub mod file;
 pub mod region;
-pub mod config;
+pub mod log;
 pub mod account;
 
 use std::path::PathBuf;
-use account::{root_compartment, admin};
+use account::{profile, credentials};
 use file::{create, permissions, read};
 
 static DIR: &str = ".ocloud";
 static NAME: &str = "config";
 
-/// The tenancy function adds the entries to the config file that allow the user to access another tenancy. It is also used for the initial setup of the user's tenancy.
+/// The defaults function writes the account profile to the config file. It is used grant access to a tenancy.
 /// # Example
 /// ```rust
-/// use oci_config::tenancy;
-/// 
 /// fn main() {
-///    tenancy(
+///    defaults(
 ///     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 ///     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 ///     "path/to/private/key",
@@ -51,13 +49,13 @@ static NAME: &str = "config";
 ///    );
 /// }
 /// ```
-pub fn tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
+pub fn defaults(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
     let mut path = PathBuf::from(DIR);
     path.push(NAME);
 
     if !path.exists() {
         create(DIR, NAME);
-        root_compartment(
+        profile(
             user, 
             fingerprint, 
             key_file, 
@@ -66,7 +64,7 @@ pub fn tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
         );
     } else {
         permissions(path.to_str().unwrap());
-        root_compartment(
+        profile(
             user, 
             fingerprint, 
             key_file, 
@@ -76,13 +74,12 @@ pub fn tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
     }
 }
 
-/// The user function writes user data for a defined tenancy into the config file.
+/// The admin function adds user credentials for a user to the config file and provides access to a defined tenancy.
 /// # Example
 /// ```rust
-/// use oci_config::user;
 /// 
 /// fn main() {
-///    user(
+///    admin(
 ///     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 ///     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 ///     "path/to/private/key",
@@ -90,12 +87,12 @@ pub fn tenancy(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, reg
 ///    );
 /// }
 /// ```
-pub fn user(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
+pub fn admin(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
     let mut path = PathBuf::from(DIR);
     path.push(NAME);
 
     permissions(path.to_str().unwrap());
-    admin(
+    credentials(
         user, 
         fingerprint, 
         key_file, 
@@ -108,10 +105,10 @@ pub fn user(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
 /// ```rust
 /// use oci_config::content;
 /// fn main() {
-///   content();
+///   report();
 /// }
 /// ```
-pub fn content() {
+pub fn report() {
     let mut path = PathBuf::from(DIR);
     path.push(NAME);
     read(path.to_str().unwrap());
