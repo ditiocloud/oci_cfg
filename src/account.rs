@@ -11,7 +11,7 @@
 //!     "ocid1.tenancy.oc1..aaaaaaaaxxxxxx",
 //!     "IAD"
 //! );
-//! credentials(
+//! admin(
 //!     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 //!     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 //!     "path/to/private/key",
