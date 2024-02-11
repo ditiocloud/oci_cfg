@@ -30,17 +30,17 @@ pub mod log;
 pub mod account;
 
 use std::path::PathBuf;
-use account::{profile, credentials};
+use account::{default, admin};
 use file::{create, permissions, read};
 
 static DIR: &str = ".ocloud";
 static NAME: &str = "config";
 
-/// The defaults function writes the account profile to the config file. It is used grant access to a tenancy.
+/// The profile function writes the account profile to the config file. It is used grant access to a tenancy.
 /// # Example
 /// ```rust
 /// fn main() {
-///    defaults(
+///    profile(
 ///     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 ///     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 ///     "path/to/private/key",
@@ -49,13 +49,13 @@ static NAME: &str = "config";
 ///    );
 /// }
 /// ```
-pub fn defaults(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
+pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
     let mut path = PathBuf::from(DIR);
     path.push(NAME);
 
     if !path.exists() {
         create(DIR, NAME);
-        profile(
+        default(
             user, 
             fingerprint, 
             key_file, 
@@ -64,7 +64,7 @@ pub fn defaults(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, re
         );
     } else {
         permissions(path.to_str().unwrap());
-        profile(
+        default(
             user, 
             fingerprint, 
             key_file, 
@@ -74,12 +74,12 @@ pub fn defaults(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, re
     }
 }
 
-/// The admin function adds user credentials for a user to the config file and provides access to a defined tenancy.
+/// The credentials function adds user credentials for a user to the config file and provides access to a defined tenancy.
 /// # Example
 /// ```rust
 /// 
 /// fn main() {
-///    admin(
+///    credentials(
 ///     "ocid1.user.oc1..aaaaaaaaxxxxxx",
 ///     "ocid1.fingerprint.oc1..aaaaaaaaxxxxxx",
 ///     "path/to/private/key",
@@ -87,12 +87,12 @@ pub fn defaults(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, re
 ///    );
 /// }
 /// ```
-pub fn admin(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
+pub fn credentials(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
     let mut path = PathBuf::from(DIR);
     path.push(NAME);
 
     permissions(path.to_str().unwrap());
-    credentials(
+    admin(
         user, 
         fingerprint, 
         key_file, 
