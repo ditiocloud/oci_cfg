@@ -98,7 +98,7 @@ impl ToString for Codes {
     }
 }
 
-/// The identifier function converts a given region code to the corresponding region identifier as a string.
+/// converts a given region code to the corresponding region identifier as a string.
 /// # Example
 /// ```rust
 /// use oci_config_writer::region::identifier;
@@ -158,7 +158,7 @@ pub fn identifier(code: &str) -> String { // translate region code to string
     id
 }
 
-/// The identifiers function lists all regions enabled in the module.
+/// lists all regions enabled in the module.
 /// # Example
 /// ```rust
 /// use oci_config_writer::region::identifiers;

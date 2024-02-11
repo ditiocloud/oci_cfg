@@ -1,6 +1,7 @@
 //! The config module contains the log configuration options for the config writer.
 //! 
 
+/// represents the different levels of logging.
 pub enum LogLevel {
     Error,
     Warn,
@@ -8,13 +9,14 @@ pub enum LogLevel {
     Debug,
 }
 
+/// represents the different destinations for logging.
 pub enum LogOutput {
     Stdout,
     Sterr,
     File(String),
 }
 
-/// This struct contains the configuration options for controlling logging.
+/// contains the configuration options for controlling logging.
 /// # Example
 /// ```rust
 /// use oci_config::config::Logging;
