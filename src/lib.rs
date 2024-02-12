@@ -27,16 +27,14 @@
 pub mod file;
 pub mod region;
 pub mod log;
-pub mod account;
 
 use std::fs::OpenOptions;
 use std::io::prelude::*;
 use std::io;
 use std::path::PathBuf;
 use directories::UserDirs;
-use account::{default, admin};
 use file::{create, permissions, read};
-use region::{identifier, identifiers};
+use region::identifier;
 
 static DIR: &str = ".oci";
 static NAME: &str = "config";
@@ -44,10 +42,10 @@ static NAME: &str = "config";
 // Define the struct representing a file entry
 #[derive(Debug)]
 pub struct Profile {
-    user: &'static str,
-    fingerprint: &'static str,
-    key_file: &'static str,
-    tenancy: &'static str,
+    user: String,
+    fingerprint: String,
+    key_file: String,
+    tenancy: String,
     region: String, // selection of active regions
 }
 
@@ -100,12 +98,12 @@ impl Profile {
 ///    );
 /// }
 /// ```
-pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, home: String) {
+pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, home: &str) {
     let default_profile = Profile {
-        user,
-        fingerprint,
-        key_file,
-        tenancy,
+        user: String::from(user),
+        fingerprint: String::from(fingerprint),
+        key_file: String::from(key_file),
+        tenancy: String::from(tenancy),
         region: identifier(home)
     };
     let mut path = PathBuf::from(DIR);
@@ -130,6 +128,49 @@ pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, hom
     }
 }
 
+// Define the struct representing an admin profile
+#[derive(Debug)]
+pub struct Credentials {
+    user: String,
+    fingerprint: String,
+    key_file: String,
+    pass_phrase: String
+}
+
+impl Credentials {
+    // Function to format the Profile struct as a string
+    fn admin_entry(&self) -> String {
+        format!("[ADMIN_USER]\nuser: {}\nfingerprint: {}\nkey_file: {}\npass_phrase: {}\n\n", 
+        self.user, self.fingerprint, self.key_file, self.pass_phrase)
+    }
+    
+    // Function to write the struct to the config file
+    fn write_to_config(&self, path: &str) -> io::Result<()> {
+        // define directory directory
+        let config_path = UserDirs::new().unwrap().home_dir().join(path);
+        let path_to_str = config_path.to_str().expect("Failed to convert path to str");
+
+        // set modification properties
+        let config = OpenOptions::new()
+            .write(true)
+            .append(true)
+            .open(path_to_str);
+        match config {
+            Ok(mut config) => {
+                match config.write_all(
+                    self.admin_entry().as_bytes(),
+                ) {
+                    Ok(_) => println!("Admin credentials written to file successfully"),
+                    Err(e) => println!("Failed to write admin credentials to file: {}", e),
+                }
+            }
+            Err(e) => println!("Failed to open file: {}", e),
+        }
+    
+        Ok(())
+    }
+}
+
 /// adds user credentials to the config file to authenticate the user and to provide access to a defined tenancy.
 /// # Example
 /// ```rust
@@ -145,15 +186,22 @@ pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, hom
 /// }
 /// ```
 pub fn credentials(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &str) {
-    let file_path: String = format!("{}/{}", DIR, NAME); 
+    let admin = Credentials {
+        user: String::from(user),
+        fingerprint: String::from(fingerprint),
+        key_file: String::from(key_file),
+        pass_phrase: String::from(pass_phrase)
+    };
 
-    permissions(file_path.as_str());
-    admin(
-        user, 
-        fingerprint, 
-        key_file, 
-        pass_phrase
-    );
+    let path: String = format!("{}/{}", DIR, NAME); 
+
+    permissions(path.as_str());
+    // Call the write_to_config method to write the struct to the file
+    if let Err(err) = admin.write_to_config(path.as_str()) {
+        eprintln!("Error writing to file: {}", err);
+    } else {
+        println!("Profile successfully written to {}", path.as_str());
+    }
 }
 
 /// reads and returns the content of a config file as a string.
@@ -166,6 +214,6 @@ pub fn credentials(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &
 /// }
 /// ```
 pub fn report() {
-    let file_path: String = format!("{}/{}", DIR, NAME); 
-    read(file_path.as_str());
+    let path: String = format!("{}/{}", DIR, NAME); 
+    read(path.as_str());
 }

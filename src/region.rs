@@ -5,7 +5,7 @@
 //! ```rust
 //! use oci_config_writer::region::{identifier, identifiers};
 //! 
-//! let home = identifier(IAD);
+//! let home = identifier("IAD");
 //! let regions = identifiers();
 //! println!("The home region identifier is: {}", home);
 //! println!("The following regions can be converted with this module: {:?}", regions);
@@ -102,9 +102,9 @@ impl ToString for Codes {
 /// # Example
 /// ```rust
 /// use oci_config_writer::region::identifier;
-/// let home = identifier(IAD);
+/// let home = identifier("IAD");
 /// ```
-pub fn identifier(code: String) -> String { // translate region code to string
+pub fn identifier(code: &str) -> String { // translate region code to string
     // Convert input to lowercase for case-insensitivity
     let input_lowercase = code.trim().to_lowercase();
 

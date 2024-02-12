@@ -80,8 +80,8 @@ pub fn create(config_dir: &str, config_file: &str) -> String {
 /// fn main() {
 ///     let config_dir = ".oci";
 ///     let config_file = "config";
-///     let file_path: String = format!("{}/{}", config_dir, config_file);
-///     permissions(file_path);
+///     let file_path = format!("{}/{}", config_dir, config_file);
+///     permissions(file_path.as_str());
 /// }
 /// ```
 pub fn permissions(file_path: &str) {
@@ -125,8 +125,8 @@ pub fn permissions(file_path: &str) {
 /// fn main() {
 ///     let config_dir = ".oci";
 ///     let config_file = "config";
-///     let file_path: String = format!("{}/{}", config_dir, config_file);
-///     read(file_path);
+///     let file_path = format!("{}/{}", config_dir, config_file);
+///     read(file_path.as_str());
 /// }
 /// ```
 pub fn read(file_path: &str) {
