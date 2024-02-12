@@ -1,6 +1,6 @@
 # OCI Config Writer
 
-This small library enables engineers to create an Oracle Cloud Infrastructure (OCI) config file with Rust. It checks, whether a file already exists, before it writes the config into the sub-directory within the user's home directory. It also checks the permissions before adding content. To instantiate the library it should be addressed as `oci_config_writer`, this name is used within the modules. Documentation created using the `make doc` command. 
+This small library enables engineers to create an Oracle Cloud Infrastructure (OCI) config file in Rust. It checks, whether a file already exists, before it writes the config into the sub-directory within the user's home. It checks the permissions before adding content. To instantiate the library it should be addressed as `oci_config_writer`, this name is used within the modules. Documentation created using the `make doc` command. 
 
 More information about the config file itself can be found in the official documentation under: <https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm>
 
