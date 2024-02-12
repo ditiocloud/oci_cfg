@@ -29,61 +29,12 @@ pub mod region;
 pub mod log;
 pub mod account;
 
-use std::fs::OpenOptions;
-use std::io::prelude::*;
-use std::io;
 use std::path::PathBuf;
-use directories::UserDirs;
 use account::{default, admin};
 use file::{create, permissions, read};
-use region::{identifier, identifiers};
 
 static DIR: &str = ".oci";
 static NAME: &str = "config";
-
-// Define the struct representing a file entry
-#[derive(Debug)]
-pub struct Profile {
-    user: &'static str,
-    fingerprint: &'static str,
-    key_file: &'static str,
-    tenancy: &'static str,
-    region: String, // selection of active regions
-}
-
-impl Profile {
-    // Function to format the Profile struct as a string
-    fn profile_entry(&self) -> String {
-        format!("[DEFAULT]\nuser: {}\nfingerprint: {}\nkey_file: {}\ntenancy: {}\nregion: {}\n\n", 
-        self.user, self.fingerprint, self.key_file, self.tenancy, self.region)
-    }
-    
-    // Function to write the struct to the config file
-    fn write_to_config(&self, path: &str) -> io::Result<()> {
-        // define directory directory
-        let config_path = UserDirs::new().unwrap().home_dir().join(path);
-        let path_to_str = config_path.to_str().expect("Failed to convert path to str");
-
-        // set modification properties
-        let config = OpenOptions::new()
-            .write(true)
-            .append(true)
-            .open(path_to_str);
-        match config {
-            Ok(mut config) => {
-                match config.write_all(
-                    self.profile_entry().as_bytes(),
-                ) {
-                    Ok(_) => println!("Tenancy data written to file successfully"),
-                    Err(e) => println!("Failed to write tenancy data to file: {}", e),
-                }
-            }
-            Err(e) => println!("Failed to create file: {}", e),
-        }
-    
-        Ok(())
-    }
-}
 
 /// writes an account profile to the config file, the values are used as defaults for admin users.
 /// # Example
@@ -100,33 +51,30 @@ impl Profile {
 ///    );
 /// }
 /// ```
-pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, home: String) {
-    let default_profile = Profile {
-        user,
-        fingerprint,
-        key_file,
-        tenancy,
-        region: identifier(home)
-    };
+pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, region: &str) {
     let mut path = PathBuf::from(DIR);
     path.push(NAME);
 
     if !path.exists() {
         create(DIR, NAME);
-        // Call the write_to_config method to write the struct to the file
-        if let Err(err) = default_profile.write_to_config(path.to_str().unwrap()) {
-            eprintln!("Error writing to file: {}", err);
-        } else {
-            println!("Profile successfully written to {}", path.to_str().unwrap());
-        }
+        default(
+            path.to_str().unwrap(),
+            user, 
+            fingerprint, 
+            key_file, 
+            tenancy, 
+            region
+        );
     } else {
         permissions(path.to_str().unwrap());
-        // Call the write_to_config method to write the struct to the file
-        if let Err(err) = default_profile.write_to_config(path.to_str().unwrap()) {
-            eprintln!("Error writing to file: {}", err);
-        } else {
-            println!("Profile successfully written to {}", path.to_str().unwrap());
-        }
+        default(
+            path.to_str().unwrap(),
+            user, 
+            fingerprint, 
+            key_file, 
+            tenancy, 
+            region
+        );
     }
 }
 

@@ -6,7 +6,7 @@
 //! use oci_config_writer::file::{create, permissions, read};
 //! 
 //! fn main() {
-//!    let config_dir = ".ocloud";
+//!    let config_dir = ".oci";
 //!    let config_file = "config";
 //!    let file_path: String = format!("{}/{}", config_dir, config_file);
 //! 
@@ -27,7 +27,7 @@ use std::path::PathBuf;
 /// use oci_config_writer::file::create;
 /// 
 /// fn main() {
-///    let config_dir = ".ocloud";
+///    let config_dir = ".oci";
 ///    let config_file = "config";
 ///    create(config_dir, config_file);
 /// }
@@ -75,12 +75,13 @@ pub fn create(config_dir: &str, config_file: &str) -> String {
 /// The permissions function checks whether rust can write data into an existing config file. It returns a message indicating whether the file can be opened.
 /// # Example
 /// ```rust
-/// use directories::UserDirs;
 /// use oci_config_writer::file::permissions;
 /// 
 /// fn main() {
-///   let config_file = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
-///   permissions(config_file.to_str().unwrap());
+///     let config_dir = ".oci";
+///     let config_file = "config";
+///     let file_path: String = format!("{}/{}", config_dir, config_file);
+///     permissions(file_path);
 /// }
 /// ```
 pub fn permissions(file_path: &str) {
@@ -119,12 +120,13 @@ pub fn permissions(file_path: &str) {
 /// The read function reads and returns the content of an existing config file.
 /// # Example
 /// ```rust
-/// use directories::UserDirs;
 /// use oci_config_writer::file::read;
 /// 
 /// fn main() {
-///     let config_file = UserDirs::new().unwrap().home_dir().join(".ocloud/config");
-///     read(config_file.to_str().unwrap());
+///     let config_dir = ".oci";
+///     let config_file = "config";
+///     let file_path: String = format!("{}/{}", config_dir, config_file);
+///     read(file_path);
 /// }
 /// ```
 pub fn read(file_path: &str) {
