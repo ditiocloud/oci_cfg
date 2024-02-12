@@ -6,7 +6,7 @@
 //! use oci_config_writer::region::{identifier, identifiers};
 //! 
 //! let home = identifier("IAD");
-//! let regions = identifiers();
+//! let regions = list();
 //! println!("The home region identifier is: {}", home);
 //! println!("The following regions can be converted with this module: {:?}", regions);
 //! ```
@@ -161,10 +161,10 @@ pub fn identifier(code: &str) -> String { // translate region code to string
 /// lists all regions enabled in the module.
 /// # Example
 /// ```rust
-/// use oci_config_writer::region::identifiers;
-/// identifiers();
+/// use oci_config_writer::region::list;
+/// list();
 /// ```
-pub fn identifiers() {
+pub fn list() {
     match Codes::IAD {
         Codes::IAD => println!("IAD - Ashburn, US"),
         _ => unreachable!(), // This line is required to make the match exhaustive

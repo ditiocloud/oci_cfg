@@ -39,7 +39,7 @@ use region::identifier;
 static DIR: &str = ".oci";
 static NAME: &str = "config";
 
-// Define the struct representing a file entry
+/// represents a tenancy profile with the user's OCID, fingerprint, path to the private key, OCID of the tenancy and the region.
 #[derive(Debug)]
 pub struct Profile {
     user: String,
@@ -128,7 +128,7 @@ pub fn profile(user: &str, fingerprint: &str, key_file: &str, tenancy: &str, hom
     }
 }
 
-// Define the struct representing an admin profile
+/// represents an admin profile with the user's OCID, fingerprint, path to the private key and the passphrase.
 #[derive(Debug)]
 pub struct Credentials {
     user: String,

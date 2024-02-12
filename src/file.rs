@@ -21,7 +21,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
 
-/// The file function creates a sub-directory and the configuration file in the sub-directoryin of a user's home. It returns the path of the config file as a String.
+/// creates a sub-directory and the configuration file in the user's home. It returns the path of the config file as a String.
 /// # Example
 /// ```rust
 /// use oci_config_writer::file::create;
@@ -72,7 +72,7 @@ pub fn create(config_dir: &str, config_file: &str) -> String {
     }
 }
 
-/// The permissions function checks whether rust can write data into an existing config file. It returns a message indicating whether the file can be opened.
+/// checks whether rust can write data into an existing config file. It returns a message indicating whether the file can be opened.
 /// # Example
 /// ```rust
 /// use oci_config_writer::file::permissions;
@@ -117,7 +117,7 @@ pub fn permissions(file_path: &str) {
     }
 }
 
-/// The read function reads and returns the content of an existing config file.
+/// reads and returns the content of an existing config file.
 /// # Example
 /// ```rust
 /// use oci_config_writer::file::read;
