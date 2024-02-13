@@ -22,6 +22,6 @@ fn main() {
     "path/to/private/key",
     "passphrase"
    );
-   report();
+   content();
 }
 ```
