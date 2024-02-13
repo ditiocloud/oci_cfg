@@ -3,7 +3,7 @@
 //! The home region is the region where the user's tenancy is located, it is used to set the default region for the user's resources.
 //! # Example:
 //! ```rust
-//! use oci_config_writer::region::{identifier, identifiers};
+//! use oci_config_writer::region::{identifier, list};
 //! 
 //! let home = identifier("IAD");
 //! let regions = list();
