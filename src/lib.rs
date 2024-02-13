@@ -210,10 +210,10 @@ pub fn credentials(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &
 /// use oci_config_writer::report;
 /// 
 /// fn main() {
-///   report();
+///   content();
 /// }
 /// ```
-pub fn report() {
+pub fn content() {
     let path: String = format!("{}/{}", DIR, NAME); 
     read(path.as_str());
 }
