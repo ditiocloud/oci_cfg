@@ -2,6 +2,8 @@
 name = "oci_cfg"
 version = "0.2.0"
 edition = "2021"
+description = "A small library for parsing and writing OCI configuration files"
+license = "MIT"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
