@@ -1,5 +1,5 @@
 
-//! The region converts region codes into the corresponding identifier. Regions are represented as an enum and a given code is translated to a string that represents the home region in the tenancy profile. 
+//! The region modules provides functions to convert region codes into the corresponding identifier. Regions are represented as an enum and a given code is translated to a string that represents the home region in the tenancy profile. 
 //! The home region is the region where the user's tenancy is located, it is used to set the default region for the user's resources.
 //! # Example:
 //! ```rust

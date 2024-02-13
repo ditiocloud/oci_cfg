@@ -1,7 +1,8 @@
-//! The config module contains the log configuration options for the config writer.
-//! 
+//! The log module provides options for logging configurations. It contains the 'LogLevel' and 'LogOutput' enums, and the 'Logging' struct.
+//! The 'LogLevel' enum represents different levels for logging.The 'LogOutput' enum represents optional destinations for logging.
+//! The 'Logging' struct contains the configuration options for controlling logging.
 
-/// represents the different levels of logging.
+/// represents different levels for logging.
 pub enum LogLevel {
     Error,
     Warn,
@@ -9,7 +10,7 @@ pub enum LogLevel {
     Debug,
 }
 
-/// represents the different destinations for logging.
+/// represents optional destinations for logging.
 pub enum LogOutput {
     Stdout,
     Sterr,
