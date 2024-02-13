@@ -5,7 +5,7 @@
 //! More information about the config file itself can be found in the official documentation under: <https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm>
 //! # Example
 //! ```rust
-//! use oci_cfg::{profile, credentials, report};
+//! use oci_cfg::{profile, credentials, content};
 //! 
 //! fn main() {
 //!    profile(
@@ -21,7 +21,7 @@
 //!     "path/to/private/key",
 //!     "passphrase"
 //!    );
-//!    report();
+//!    content();
 //! }
 //! ```
 pub mod file;
@@ -207,7 +207,7 @@ pub fn credentials(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &
 /// reads and returns the content of a config file as a string.
 /// # Example
 /// ```rust
-/// use oci_cfg::report;
+/// use oci_cfg::content;
 /// 
 /// fn main() {
 ///   content();
