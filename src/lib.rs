@@ -5,7 +5,7 @@
 //! More information about the config file itself can be found in the official documentation under: <https://docs.oracle.com/en-us/iaas/Content/API/Concepts/sdkconfig.htm>
 //! # Example
 //! ```rust
-//! use oci_config_writer::{profile, credentials, report};
+//! use oci_cfg::{profile, credentials, report};
 //! 
 //! fn main() {
 //!    profile(
@@ -86,7 +86,7 @@ impl Profile {
 /// writes an account profile to the config file, the values are used as defaults for admin users.
 /// # Example
 /// ```rust
-/// use oci_config_writer::profile;
+/// use oci_cfg::profile;
 /// 
 /// fn main() {
 ///    profile(
@@ -174,7 +174,7 @@ impl Credentials {
 /// adds user credentials to the config file to authenticate the user and to provide access to a defined tenancy.
 /// # Example
 /// ```rust
-/// use oci_config_writer::credentials;
+/// use oci_cfg::credentials;
 /// 
 /// fn main() {
 ///    credentials(
@@ -207,7 +207,7 @@ pub fn credentials(user: &str, fingerprint: &str, key_file: &str, pass_phrase: &
 /// reads and returns the content of a config file as a string.
 /// # Example
 /// ```rust
-/// use oci_config_writer::report;
+/// use oci_cfg::report;
 /// 
 /// fn main() {
 ///   content();

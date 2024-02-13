@@ -3,7 +3,7 @@
 //! The home region is the region where the user's tenancy is located, it is used to set the default region for the user's resources.
 //! # Example:
 //! ```rust
-//! use oci_config_writer::region::{identifier, list};
+//! use oci_cfg::region::{identifier, list};
 //! 
 //! let home = identifier("IAD");
 //! let regions = list();
@@ -101,7 +101,7 @@ impl ToString for Codes {
 /// converts a given region code to the corresponding region identifier as a string.
 /// # Example
 /// ```rust
-/// use oci_config_writer::region::identifier;
+/// use oci_cfg::region::identifier;
 /// let home = identifier("IAD");
 /// ```
 pub fn identifier(code: &str) -> String { // translate region code to string
@@ -161,7 +161,7 @@ pub fn identifier(code: &str) -> String { // translate region code to string
 /// lists all regions enabled in the module.
 /// # Example
 /// ```rust
-/// use oci_config_writer::region::list;
+/// use oci_cfg::region::list;
 /// list();
 /// ```
 pub fn list() {

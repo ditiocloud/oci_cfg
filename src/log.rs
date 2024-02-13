@@ -20,14 +20,14 @@ pub enum LogOutput {
 /// contains the configuration options for controlling logging.
 /// # Example
 /// ```rust
-/// use oci_config_writer::log::Logging;
+/// use oci_cfg::log::Logging;
 /// let config = Logging::new();
 /// ```
 /// 
 /// Create a new 'Logging' struct with custom values.
 /// # Example
 /// ```rust
-/// use oci_config_writer::log::{Logging, LogLevel, LogOutput};
+/// use oci_cfg::log::{Logging, LogLevel, LogOutput};
 /// let config = Logging {
 ///    enabled: true,
 ///    level: LogLevel::Debug,

@@ -3,7 +3,7 @@
 //! It stores the API configuration in a file located in a hidden sub-directory of a user's home. 
 //! # Example
 //! ```rust
-//! use oci_config_writer::file::{create, permissions, read};
+//! use oci_cfg::file::{create, permissions, read};
 //! 
 //! fn main() {
 //!    let config_dir = ".oci";
@@ -24,7 +24,7 @@ use std::path::PathBuf;
 /// creates a sub-directory and the configuration file in the user's home. It returns the path of the config file as a String.
 /// # Example
 /// ```rust
-/// use oci_config_writer::file::create;
+/// use oci_cfg::file::create;
 /// 
 /// fn main() {
 ///    let config_dir = ".oci";
@@ -75,7 +75,7 @@ pub fn create(config_dir: &str, config_file: &str) -> String {
 /// checks whether rust can write data into an existing config file. It returns a message indicating whether the file can be opened.
 /// # Example
 /// ```rust
-/// use oci_config_writer::file::permissions;
+/// use oci_cfg::file::permissions;
 /// 
 /// fn main() {
 ///     let config_dir = ".oci";
@@ -120,7 +120,7 @@ pub fn permissions(file_path: &str) {
 /// reads and returns the content of an existing config file.
 /// # Example
 /// ```rust
-/// use oci_config_writer::file::read;
+/// use oci_cfg::file::read;
 /// 
 /// fn main() {
 ///     let config_dir = ".oci";

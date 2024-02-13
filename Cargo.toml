@@ -1,5 +1,5 @@
 [package]
-name = "oci_config_writer"
+name = "oci_cfg"
 version = "0.2.0"
 edition = "2021"
 
