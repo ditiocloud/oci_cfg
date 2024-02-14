@@ -28,6 +28,7 @@ fn main() {
 ```
 ## Modules
 
+| Module    | Description |
 | :--------: | :------- |
 | file  | 	The file module contains helper functions to create, read the content and check the permissions of the config file. It stores the API configuration in a file located in a hidden sub-directory of a user’s home. |
 | log  | 	The log module provides options for logging configurations. It contains the ‘LogLevel’ and ‘LogOutput’ enums, and the ‘Logging’ struct. The ‘LogLevel’ enum represents different levels for logging.The ‘LogOutput’ enum represents optional destinations for logging. The ‘Logging’ struct contains the configuration options for controlling logging. |
