@@ -28,19 +28,23 @@ fn main() {
 ```
 ## Modules
 
-| Module    | Description |
-| :--------: | :------- |
-| file  | 	The file module contains helper functions to create, read the content and check the permissions of the config file. It stores the API configuration in a file located in a hidden sub-directory of a user’s home. |
-| log  | 	The log module provides options for logging configurations. It contains the ‘LogLevel’ and ‘LogOutput’ enums, and the ‘Logging’ struct. The ‘LogLevel’ enum represents different levels for logging.The ‘LogOutput’ enum represents optional destinations for logging. The ‘Logging’ struct contains the configuration options for controlling logging. |
-| region  | 		The region modules provides functions to convert region codes into the corresponding identifier. Regions are represented as an enum and a given code is translated to a string that represents the home region in the tenancy profile. The home region is the region where the user’s tenancy is located, it is used to set the default region for the user’s resources. |
+| Module       | Description |
+| :----------: | :-------    |
+| file         | 	The file module contains helper functions to create, read the content and check the permissions of the config file. It stores the API configuration in a file located in a hidden sub-directory of a user’s home. |
+| log          | 	The log module provides options for logging configurations. It contains the ‘LogLevel’ and ‘LogOutput’ enums, and the ‘Logging’ struct. The ‘LogLevel’ enum represents different levels for logging.The ‘LogOutput’ enum represents optional destinations for logging. The ‘Logging’ struct contains the configuration options for controlling logging. |
+| region       | 		The region modules provides functions to convert region codes into the corresponding identifier. Regions are represented as an enum and a given code is translated to a string that represents the home region in the tenancy profile. The home region is the region where the user’s tenancy is located, it is used to set the default region for the user’s resources. |
 
 ## Structs
 
-| Profile  | 	represents a tenancy profile with the user’s OCID, fingerprint, path to the private key, OCID of the tenancy and the region. |
+| Struct       | Description |
+| :----------: | :-------    |
+| Profile      | 	represents a tenancy profile with the user’s OCID, fingerprint, path to the private key, OCID of the tenancy and the region. |
 | Credentials  | 	represents an admin profile with the user’s OCID, fingerprint, path to the private key and the passphrase. |
 
 ## Functions
 
-| profile  | 	writes an account profile to the config file, the values are used as defaults for admin users. |
+| Function     | Description |
+| :----------: | :-------    |
+| profile      | 	writes an account profile to the config file, the values are used as defaults for admin users. |
 | credentials  | 	adds user credentials to the config file to authenticate the user and to provide access to a defined tenancy. |
-| content  | 		reads and returns the content of a config file as a string. |
+| content      | 		reads and returns the content of a config file as a string. |
